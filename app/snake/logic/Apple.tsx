@@ -30,7 +30,7 @@ export default class Apple {
     this.y = y;
   }
 
-  drawApple() {
+  randomizeApplePosition() {
     let randomX = 0;
     let randomY = 0;
     let isColliding = true;
@@ -38,23 +38,35 @@ export default class Apple {
     while (isColliding) {
       randomX =
         Math.floor(Math.random() * (this.canvas.width / this.unitPx)) *
-          this.unitPx +
-        this.unitPx / 2;
+        this.unitPx;
       randomY =
         Math.floor(Math.random() * (this.canvas.height / this.unitPx)) *
-          this.unitPx +
-        this.unitPx / 2;
+        this.unitPx;
 
       // Check if the generated position collides with the snake
       isColliding = this.snake.points.some(
         (segment) => segment.x === randomX && segment.y === randomY
       );
     }
+
     this.setX(randomX);
     this.setY(randomY);
+  }
+
+  drawApple(random: boolean) {
+    if (random) {
+      this.randomizeApplePosition();
+    }
+
     this.context.fillStyle = "red";
     this.context.beginPath();
-    this.context.arc(randomX, randomY, 10, 0, 2 * Math.PI);
+    this.context.arc(
+      this.x + this.unitPx / 2,
+      this.y + this.unitPx / 2,
+      10,
+      0,
+      2 * Math.PI
+    );
     this.context.fill();
   }
 }

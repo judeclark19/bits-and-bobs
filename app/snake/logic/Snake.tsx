@@ -105,35 +105,6 @@ export default class Snake {
 
     this.points.unshift(newHead);
     this.points.pop();
-
-    // this.game.init();
-    this.game.checkCollision();
     this.drawSnake();
   }
-
-  // checkCollision() {
-  //   const head = this.points[0];
-  //   if (head.x < 0 || head.x >= this.canvas.width) {
-  //     console.log("collision with wall");
-  //     this.game.stopTimer();
-  //   }
-  //   if (head.y < 0 || head.y >= this.canvas.height) {
-  //     console.log("collision with wall");
-  //     this.game.stopTimer();
-  //   }
-
-  //   const body = this.points.slice(1);
-  //   if (body.some((segment) => segment.x === head.x && segment.y === head.y)) {
-  //     console.log("collision with body");
-  //     this.game.stopTimer();
-  //   }
-
-  //   // collision with apple
-  //   const apple = this.game.apple;
-  //   if (head.x === apple.x && head.y === apple.y) {
-  //     console.log("collision with apple");
-  //     this.game.eatApple();
-  //     this.points.push({ x: head.x, y: head.y });
-  //   }
-  // }
 }
