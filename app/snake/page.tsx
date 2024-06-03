@@ -10,8 +10,10 @@ export const metadata: Metadata = {
 export default function SnakePage() {
   return (
     <div>
-      <Link href="/">Back to home</Link>
-      <h1>Snake page</h1>
+      <div style={{ backgroundColor: "#333", padding: "1rem" }}>
+        <Link href="/">← Back to home</Link>
+      </div>
+      <h1>Snake</h1>
       <SnakeCanvas />
     </div>
   );

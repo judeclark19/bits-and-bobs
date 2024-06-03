@@ -7,6 +7,16 @@ const GlobalStyles = createGlobalStyle`
     font-family: sans-serif;
   }
 
+  a {
+    color: #eee;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      font-weight: 600;
+    }
+  }
+
    button {
         background-color: #ff00ff;
         color: white;

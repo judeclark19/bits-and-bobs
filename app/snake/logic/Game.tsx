@@ -7,6 +7,7 @@ export type Point = { x: number; y: number };
 export default class SnakeGameLogic {
   isRunning: boolean = false;
   isPaused: boolean = false;
+  gridVisible: boolean = true;
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
   unitPx: number;
@@ -31,6 +32,7 @@ export default class SnakeGameLogic {
     this.timer;
     this.isRunning = false;
     this.isPaused = false;
+    this.gridVisible = true;
 
     this.welcomeScreen();
   }
@@ -72,7 +74,7 @@ export default class SnakeGameLogic {
     this.context.fillStyle = "black";
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.drawGrid();
+    if (this.gridVisible) this.drawGrid();
     this.snake.drawSnake();
     this.apple.drawApple(true);
     this.startTimer();
@@ -92,7 +94,28 @@ export default class SnakeGameLogic {
     }
   }
 
+  setIsGridVisible(visible: boolean) {
+    this.gridVisible = visible;
+
+    if (this.isRunning && !this.isPaused) {
+      if (visible) {
+        this.drawGrid();
+      } else {
+        this.eraseGrid();
+      }
+    }
+  }
+
+  toggleGrid() {
+    if (this.gridVisible) {
+      this.eraseGrid();
+    } else {
+      this.drawGrid();
+    }
+  }
+
   drawGrid() {
+    this.gridVisible = true;
     this.context.strokeStyle = "gray";
     for (let i = 0; i < this.canvas.width; i += this.unitPx) {
       this.context.beginPath();
@@ -107,6 +130,15 @@ export default class SnakeGameLogic {
       this.context.lineTo(this.canvas.width, i);
       this.context.stroke();
     }
+  }
+
+  eraseGrid() {
+    this.gridVisible = false;
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.fillStyle = "black";
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.snake.drawSnake();
+    this.apple.drawApple(false);
   }
 
   checkCollision(): boolean {
@@ -185,8 +217,6 @@ export default class SnakeGameLogic {
   }
 
   resumeGame() {
-    console.log("resumeGame called");
-
     this.isRunning = true;
     this.isPaused = false;
     this.buttonText = "Pause";
@@ -195,7 +225,10 @@ export default class SnakeGameLogic {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // Redraw the grid, snake, and apple
-    this.drawGrid();
+
+    this.context.fillStyle = "black";
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.gridVisible) this.drawGrid();
     this.snake!.drawSnake();
     this.apple!.drawApple(false);
 
