@@ -14,6 +14,10 @@ export default function SnakePage() {
         <Link href="/">← Back to home</Link>
       </div>
       <h1>Snake</h1>
+      <p>
+        Use arrow keys to control snake, or if you are on a touch device you can
+        use the direction pad below.
+      </p>
       <SnakeCanvas />
     </div>
   );

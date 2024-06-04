@@ -14,13 +14,15 @@ export const FlexDiv = styled.div<{
 
 export const SettingsDiv = styled.div`
   width: 300px;
-
+  background-color: #170f5a;
+  padding: 1rem;
+  padding-bottom: 3rem;
   @media (max-width: 645px) {
     text-align: center;
   }
 `;
 
-export const ToggleGridDiv = styled.div`
+export const ToggleDiv = styled.div`
   display: flex;
   gap: 1.5rem;
 
@@ -30,7 +32,7 @@ export const ToggleGridDiv = styled.div`
 `;
 
 export const SwitchDiv = styled.div`
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -102,34 +104,34 @@ export const SwitchDiv = styled.div`
 export const ControlButton = styled.button<{
   $color: string;
 }>`
+  margin-top: 1rem;
   background-color: ${(props) => props.$color};
 `;
 
-export const DirectionPad = styled.div`
-  display: none;
-  @media (max-width: 645px) {
+export const DirectionPad = styled.div<{
+  $display: boolean;
+}>`
+  display: ${(props) => (props.$display ? "grid" : "none")};
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.5rem;
+
+  width: fit-content;
+  margin: auto;
+  margin-top: 2rem;
+
+  > div {
+    /* border: 1px solid red; */
+    width: 40px;
+    height: 40px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 0.5rem;
+    place-items: center;
 
-    width: fit-content;
-    margin: auto;
-    margin-top: 2rem;
-
-    > div {
-      /* border: 1px solid red; */
+    button {
+      padding: 0;
       width: 40px;
       height: 40px;
-      display: grid;
-      place-items: center;
-
-      button {
-        padding: 0;
-        width: 40px;
-        height: 40px;
-        color: black;
-      }
+      color: black;
     }
   }
 `;
