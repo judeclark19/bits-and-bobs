@@ -18,7 +18,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
    button {
-        background-color: #ff00ff;
+        /* background-color: #ff00ff; */
         color: white;
         font-size: 1rem;
         padding: 0.5rem 1rem;
@@ -29,7 +29,7 @@ const GlobalStyles = createGlobalStyle`
         width: 100%;
 
         &:hover {
-            background-color: #ff68ff;
+            filter: brightness(1.1);
         }
    }
 `;

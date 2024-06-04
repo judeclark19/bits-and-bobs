@@ -8,8 +8,11 @@ export default class SnakeGameLogic {
   isRunning: boolean = false;
   isPaused: boolean = false;
   gridVisible: boolean = true;
-  canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
+  gameSize: "large" | "small" = "large";
+  canvas: HTMLCanvasElement;
+  canvasWidth: number;
+  canvasHeight: number;
   unitPx: number;
   snake: Snake;
   apple: Apple;
@@ -26,7 +29,10 @@ export default class SnakeGameLogic {
       throw new Error("Failed to get 2D context");
     }
     this.context = context;
-    this.unitPx = 25;
+    this.gameSize = window.innerWidth < 645 ? "small" : "large";
+    this.canvasWidth = this.gameSize === "small" ? 300 : 600;
+    this.canvasHeight = this.gameSize === "small" ? 300 : 600;
+    this.unitPx = this.gameSize === "small" ? 12 : 24;
     this.snake = new Snake(this);
     this.apple = new Apple(this);
     this.timer;
@@ -34,32 +40,103 @@ export default class SnakeGameLogic {
     this.isPaused = false;
     this.gridVisible = true;
 
-    this.welcomeScreen();
+    setTimeout(() => {
+      this.welcomeScreen();
+    }, 10);
+
+    // add event listener for window resize
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 645 && this.gameSize === "large") {
+        // make game small
+        this.canvas.remove();
+        this.gameSize = "small";
+        this.canvasWidth = 300;
+        this.canvasHeight = 300;
+        this.unitPx = 12;
+
+        this.redrawCanvas();
+      } else if (window.innerWidth >= 645 && this.gameSize === "small") {
+        // make game large
+        this.canvas.remove();
+        this.gameSize = "large";
+        this.canvasWidth = 600;
+        this.canvasHeight = 600;
+        this.unitPx = 24;
+
+        this.redrawCanvas();
+      }
+    });
+  }
+
+  redrawCanvas() {
+    // Create and configure new canvas
+    const canvas = document.createElement("canvas");
+    canvas.height = this.canvasHeight;
+    canvas.width = this.canvasWidth;
+    canvas.style.border = "2px solid gray";
+    canvas.style.borderRadius = "0.25rem";
+
+    // Append new canvas to DOM
+    document.getElementById("canvas-container")!.appendChild(canvas);
+
+    // Set new canvas and context
+    this.canvas = canvas;
+    this.context = canvas.getContext("2d")!;
+
+    // Clear and set the canvas background
+    this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    this.context.fillStyle = "black";
+    this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+    if (!this.isRunning) {
+      this.welcomeScreen();
+      return;
+    }
+
+    // Redraw grid if visible
+    if (this.gridVisible) {
+      this.drawGrid();
+    }
+
+    // Recalculate and redraw snake points
+    this.snake.recalculatePoints();
+    this.snake.drawSnake();
+
+    // Redraw apple
+    this.apple.recalculatePosition();
+    this.apple.drawApple(false);
+
+    if (this.isPaused) {
+      this.pauseGame();
+    }
   }
 
   welcomeScreen() {
-    this.context.fillStyle = "black";
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    console.log("show welcome screen");
+    this.context!.fillStyle = "black";
+    this.context!.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
     // "Snake Game"
-    this.context.fillStyle = "white";
-    this.context.font = "48px sans-serif";
+    this.context!.fillStyle = "white";
+    this.context!.font =
+      this.gameSize === "small" ? "30px sans-serif" : "48px sans-serif";
     const snakeGameText = "Snake Game";
-    const snakeGameTextWidth = this.context.measureText(snakeGameText).width;
-    this.context.fillText(
+    const snakeGameTextWidth = this.context!.measureText(snakeGameText).width;
+    this.context!.fillText(
       snakeGameText,
-      (this.canvas.width - snakeGameTextWidth) / 2,
-      this.canvas.height / 2 - 50
+      (this.canvasWidth - snakeGameTextWidth) / 2,
+      this.canvasHeight / 2 - 50
     );
 
     // "Press Enter to start"
-    this.context.font = "24px sans-serif";
-    const startText = "Press Enter to start";
-    const startTextWidth = this.context.measureText(startText).width;
-    this.context.fillText(
+    this.context!.font =
+      this.gameSize === "small" ? "16px sans-serif" : "24px sans-serif";
+    const startText = "Press Enter or click button to start";
+    const startTextWidth = this.context!.measureText(startText).width;
+    this.context!.fillText(
       startText,
-      (this.canvas.width - startTextWidth) / 2,
-      this.canvas.height / 2
+      (this.canvasWidth - startTextWidth) / 2,
+      this.canvasHeight / 2
     );
   }
 
@@ -71,8 +148,8 @@ export default class SnakeGameLogic {
 
     this.buttonText = "Pause";
     this.isRunning = true;
-    this.context.fillStyle = "black";
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context!.fillStyle = "black";
+    this.context!.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
     if (this.gridVisible) this.drawGrid();
     this.snake.drawSnake();
@@ -116,27 +193,27 @@ export default class SnakeGameLogic {
 
   drawGrid() {
     this.gridVisible = true;
-    this.context.strokeStyle = "gray";
-    for (let i = 0; i < this.canvas.width; i += this.unitPx) {
-      this.context.beginPath();
-      this.context.moveTo(i, 0);
-      this.context.lineTo(i, this.canvas.height);
-      this.context.stroke();
+    this.context!.strokeStyle = "gray";
+    for (let i = 0; i < this.canvasWidth; i += this.unitPx) {
+      this.context!.beginPath();
+      this.context!.moveTo(i, 0);
+      this.context!.lineTo(i, this.canvasHeight);
+      this.context!.stroke();
     }
 
-    for (let i = 0; i < this.canvas.height; i += this.unitPx) {
-      this.context.beginPath();
-      this.context.moveTo(0, i);
-      this.context.lineTo(this.canvas.width, i);
-      this.context.stroke();
+    for (let i = 0; i < this.canvasHeight; i += this.unitPx) {
+      this.context!.beginPath();
+      this.context!.moveTo(0, i);
+      this.context!.lineTo(this.canvasWidth, i);
+      this.context!.stroke();
     }
   }
 
   eraseGrid() {
     this.gridVisible = false;
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = "black";
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context!.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    this.context!.fillStyle = "black";
+    this.context!.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.snake.drawSnake();
     this.apple.drawApple(false);
   }
@@ -151,9 +228,9 @@ export default class SnakeGameLogic {
 
     if (
       head.x < 0 ||
-      head.x >= this.canvas.width ||
+      head.x >= this.canvasWidth ||
       head.y < 0 ||
-      head.y >= this.canvas.height
+      head.y >= this.canvasHeight
     ) {
       this.endGameMessage = "Collided with wall";
       this.endGame();
@@ -182,7 +259,7 @@ export default class SnakeGameLogic {
   }
 
   pauseGame() {
-    if (this.isPaused || !this.isRunning) {
+    if (!this.isRunning) {
       return;
     }
 
@@ -191,28 +268,30 @@ export default class SnakeGameLogic {
     this.buttonText = "Resume";
 
     // add translucent overlay
-    this.context.fillStyle = "rgba(0, 0, 0, 0.5)";
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context!.fillStyle = "rgba(0, 0, 0, 0.5)";
+    this.context!.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
     // add 'Paused' text on top
-    this.context.fillStyle = "white";
-    this.context.font = "32px sans-serif";
+    this.context!.fillStyle = "white";
+    this.context!.font =
+      this.gameSize === "small" ? "20px sans-serif" : "32px sans-serif";
     const pausedText = "Paused";
-    const pausedTextWidth = this.context.measureText(pausedText).width;
-    this.context.fillText(
+    const pausedTextWidth = this.context!.measureText(pausedText).width;
+    this.context!.fillText(
       pausedText,
-      (this.canvas.width - pausedTextWidth) / 2,
-      this.canvas.height / 2 - 50
+      (this.canvasWidth - pausedTextWidth) / 2,
+      this.canvasHeight / 2 - 50
     );
 
     // add 'Press Enter to resume' text on bottom
-    this.context.font = "24px sans-serif";
-    const resumeText = "Press Enter to resume";
-    const resumeTextWidth = this.context.measureText(resumeText).width;
-    this.context.fillText(
+    this.context!.font =
+      this.gameSize === "small" ? "16px sans-serif" : "24px sans-serif";
+    const resumeText = "Press Enter or click button resume";
+    const resumeTextWidth = this.context!.measureText(resumeText).width;
+    this.context!.fillText(
       resumeText,
-      (this.canvas.width - resumeTextWidth) / 2,
-      this.canvas.height / 2
+      (this.canvasWidth - resumeTextWidth) / 2,
+      this.canvasHeight / 2
     );
   }
 
@@ -222,12 +301,12 @@ export default class SnakeGameLogic {
     this.buttonText = "Pause";
 
     // Clear the pause overlay
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context!.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
     // Redraw the grid, snake, and apple
 
-    this.context.fillStyle = "black";
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context!.fillStyle = "black";
+    this.context!.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     if (this.gridVisible) this.drawGrid();
     this.snake!.drawSnake();
     this.apple!.drawApple(false);
@@ -239,40 +318,42 @@ export default class SnakeGameLogic {
     this.stopTimer();
     this.isRunning = false;
     this.buttonText = "Restart";
-    this.context.fillStyle = "black";
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context!.fillStyle = "black";
+    this.context!.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
     // "Game Over"
-    this.context.fillStyle = "white";
-    this.context.font = "48px sans-serif";
+    this.context!.fillStyle = "white";
+    this.context!.font =
+      this.gameSize === "small" ? "30px sans-serif" : "48px sans-serif";
     const gameOverText = "Game Over";
-    const gameOverTextWidth = this.context.measureText(gameOverText).width;
-    this.context.fillText(
+    const gameOverTextWidth = this.context!.measureText(gameOverText).width;
+    this.context!.fillText(
       gameOverText,
-      (this.canvas.width - gameOverTextWidth) / 2,
-      this.canvas.height / 2 - 50
+      (this.canvasWidth - gameOverTextWidth) / 2,
+      this.canvasHeight / 2 - 50
     );
 
     // end game message (how did you die?)
-    this.context.font = "24px sans-serif";
-    const endGameMessageWidth = this.context.measureText(
+    this.context!.font =
+      this.gameSize === "small" ? "16px sans-serif" : "24px sans-serif";
+    const endGameMessageWidth = this.context!.measureText(
       this.endGameMessage
     ).width;
-    this.context.fillText(
+    this.context!.fillText(
       this.endGameMessage,
-      (this.canvas.width - endGameMessageWidth) / 2,
-      this.canvas.height / 2
+      (this.canvasWidth - endGameMessageWidth) / 2,
+      this.canvasHeight / 2
     );
 
     // final score text
-    this.context.font = "24px sans-serif";
-    this.context.fillStyle = "yellow"; // Set the text color to yellow
+    this.context!.font = "24px sans-serif";
+    this.context!.fillStyle = "yellow"; // Set the text color to yellow
     const scoreText = `Final score: ${this.score}`;
-    const scoreTextWidth = this.context.measureText(scoreText).width;
-    this.context.fillText(
+    const scoreTextWidth = this.context!.measureText(scoreText).width;
+    this.context!.fillText(
       scoreText,
-      (this.canvas.width - scoreTextWidth) / 2,
-      this.canvas.height / 2 + 50
+      (this.canvasWidth - scoreTextWidth) / 2,
+      this.canvasHeight / 2 + 50
     );
   }
 }

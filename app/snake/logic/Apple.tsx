@@ -7,9 +7,6 @@ export default class Apple {
   y: number;
   game: Game;
   snake: Snake;
-  unitPx: number;
-  canvas: HTMLCanvasElement;
-  context: CanvasRenderingContext2D;
 
   constructor(game: Game) {
     makeAutoObservable(this);
@@ -17,9 +14,6 @@ export default class Apple {
     this.y = 0;
     this.game = game;
     this.snake = this.game.snake;
-    this.unitPx = this.game.unitPx;
-    this.canvas = this.game.canvas;
-    this.context = this.game.context;
   }
 
   setX(x: number) {
@@ -37,11 +31,12 @@ export default class Apple {
 
     while (isColliding) {
       randomX =
-        Math.floor(Math.random() * (this.canvas.width / this.unitPx)) *
-        this.unitPx;
+        Math.floor(Math.random() * (this.game.canvasWidth / this.game.unitPx)) *
+        this.game.unitPx;
       randomY =
-        Math.floor(Math.random() * (this.canvas.height / this.unitPx)) *
-        this.unitPx;
+        Math.floor(
+          Math.random() * (this.game.canvasHeight / this.game.unitPx)
+        ) * this.game.unitPx;
 
       // Check if the generated position collides with the snake
       isColliding = this.snake.points.some(
@@ -53,20 +48,30 @@ export default class Apple {
     this.setY(randomY);
   }
 
+  recalculatePosition() {
+    if (this.game.gameSize === "small") {
+      this.setX(this.x / 2);
+      this.setY(this.y / 2);
+    } else {
+      this.setX(this.x * 2);
+      this.setY(this.y * 2);
+    }
+  }
+
   drawApple(random: boolean) {
     if (random) {
       this.randomizeApplePosition();
     }
 
-    this.context.fillStyle = "red";
-    this.context.beginPath();
-    this.context.arc(
-      this.x + this.unitPx / 2,
-      this.y + this.unitPx / 2,
-      10,
+    this.game.context.fillStyle = "red";
+    this.game.context.beginPath();
+    this.game.context.arc(
+      this.x + this.game.unitPx / 2,
+      this.y + this.game.unitPx / 2,
+      this.game.gameSize === "small" ? 4.5 : 10,
       0,
       2 * Math.PI
     );
-    this.context.fill();
+    this.game.context.fill();
   }
 }

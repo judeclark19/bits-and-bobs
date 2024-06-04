@@ -3,10 +3,6 @@ import Game, { Point } from "./Game";
 
 export default class Snake {
   game: Game;
-  canvas: HTMLCanvasElement;
-  unitPx: number;
-  context: CanvasRenderingContext2D;
-  timer: NodeJS.Timeout | undefined;
   points: Point[] = [];
   bodyLength: number = 5;
   direction: "up" | "down" | "left" | "right" = "right";
@@ -14,71 +10,89 @@ export default class Snake {
   constructor(game: Game) {
     makeAutoObservable(this);
     this.game = game;
-    this.unitPx = this.game.unitPx;
-    this.canvas = this.game.canvas;
-    this.context = this.game.context;
-    this.timer = this.game.timer;
     this.points = this.init();
 
     // event listener for keydown
     window.addEventListener("keydown", (e) => {
       switch (e.key) {
         case "ArrowUp":
-          if (this.direction === "down") return;
-          this.direction = "up";
+          this.changeDirection("up");
           break;
         case "ArrowDown":
-          if (this.direction === "up") return;
-          this.direction = "down";
+          this.changeDirection("down");
           break;
         case "ArrowLeft":
-          if (this.direction === "right") return;
-          this.direction = "left";
+          this.changeDirection("left");
           break;
         case "ArrowRight":
-          if (this.direction === "left") return;
-          this.direction = "right";
+          this.changeDirection("right");
           break;
       }
     });
   }
   init(): Point[] {
     const centerY =
-      Math.floor(this.canvas.height / 2 / this.unitPx) * this.unitPx;
-    const startX = (this.bodyLength - 1) * this.unitPx;
+      Math.floor(this.game.canvasHeight / 2 / this.game.unitPx) *
+      this.game.unitPx;
+    const startX = (this.bodyLength - 1) * this.game.unitPx;
     return Array.from({ length: this.bodyLength }, (_, i) => ({
-      x: startX - i * this.unitPx,
+      x: startX - i * this.game.unitPx,
       y: centerY
     }));
   }
 
+  changeDirection(newDirection: "up" | "down" | "left" | "right") {
+    if (
+      (newDirection === "up" && this.direction !== "down") ||
+      (newDirection === "down" && this.direction !== "up") ||
+      (newDirection === "left" && this.direction !== "right") ||
+      (newDirection === "right" && this.direction !== "left")
+    ) {
+      this.direction = newDirection;
+    }
+  }
+
+  recalculatePoints() {
+    if (this.game.gameSize === "small") {
+      this.points.map((point) => {
+        point.x = point.x / 2;
+        point.y = point.y / 2;
+      });
+    } else {
+      this.points.map((point) => {
+        point.x = point.x * 2;
+        point.y = point.y * 2;
+      });
+    }
+  }
+
   drawSnake() {
     this.points.forEach(({ x, y }, i) => {
-      this.context.fillStyle = i === 0 ? "lime" : "green";
-      this.context.beginPath();
-      this.context.arc(
-        x + this.unitPx / 2,
-        y + this.unitPx / 2,
-        10,
+      this.game.context.fillStyle = i === 0 ? "lime" : "green";
+      this.game.context.beginPath();
+      this.game.context.arc(
+        x + this.game.unitPx / 2,
+        y + this.game.unitPx / 2,
+        this.game.gameSize === "small" ? 4.2 : 10,
         0,
         2 * Math.PI
       );
-      this.context.fill();
+      this.game.context.fill();
     });
   }
 
   eraseSnake() {
     this.points.forEach(({ x, y }) => {
-      this.context.fillStyle = "black";
-      this.context.beginPath();
-      this.context.arc(
-        x + this.unitPx / 2,
-        y + this.unitPx / 2,
-        11,
+      this.game.context.fillStyle = "black";
+      this.game.context.beginPath();
+      this.game.context.arc(
+        x + this.game.unitPx / 2,
+        y + this.game.unitPx / 2,
+        this.game.gameSize === "small" ? 5 : 11,
         0,
         2 * Math.PI
       );
-      this.context.fill();
+      this.game.context.fill();
     });
   }
 
@@ -90,16 +104,16 @@ export default class Snake {
 
     switch (this.direction) {
       case "up":
-        newHead.y -= this.unitPx;
+        newHead.y -= this.game.unitPx;
         break;
       case "down":
-        newHead.y += this.unitPx;
+        newHead.y += this.game.unitPx;
         break;
       case "left":
-        newHead.x -= this.unitPx;
+        newHead.x -= this.game.unitPx;
         break;
       case "right":
-        newHead.x += this.unitPx;
+        newHead.x += this.game.unitPx;
         break;
     }
 
