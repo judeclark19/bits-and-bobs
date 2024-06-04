@@ -20,6 +20,11 @@ export const SettingsDiv = styled.div`
   @media (max-width: 645px) {
     text-align: center;
   }
+
+  h2 span {
+    font-size: 16px;
+    color: #ffc000;
+  }
 `;
 
 export const ToggleDiv = styled.div`

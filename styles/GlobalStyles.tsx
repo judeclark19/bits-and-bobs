@@ -18,7 +18,6 @@ const GlobalStyles = createGlobalStyle`
   }
 
    button {
-        /* background-color: #ff00ff; */
         color: white;
         font-size: 1rem;
         padding: 0.5rem 1rem;

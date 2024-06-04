@@ -19,6 +19,7 @@ const SnakeCanvas = observer(() => {
   const [displayDirectionPadOption, setDisplayDirectionPadOption] =
     useState(true);
   const [displayDirectionPad, setDisplayDirectionPad] = useState(false);
+  const [highScore, setHighScore] = useState(0);
 
   const getButtonColor = () => {
     if (!gameRef.current?.isRunning || gameRef.current?.isPaused) {
@@ -44,7 +45,7 @@ const SnakeCanvas = observer(() => {
       console.log("small");
       setDisplayDirectionPadOption(false);
       setDisplayDirectionPad(true);
-      localStorage.setItem("displayDirectionPad", "true");
+      localStorage.setItem("snakeDisplayDirectionPad", "true");
     } else {
       console.log("large");
       setDisplayDirectionPadOption(true);
@@ -52,17 +53,24 @@ const SnakeCanvas = observer(() => {
   };
 
   useEffect(() => {
+    // init game using canvas
     if (canvasRef.current && !gameRef.current) {
       gameRef.current = new SnakeGameLogic(canvasRef.current);
     }
 
-    if (localStorage.getItem("gridVisible") === "false") {
+    // grid pref from local storage
+    if (localStorage.getItem("snakeGridVisible") === "false") {
       gameRef.current?.setIsGridVisible(false);
     }
 
-    if (localStorage.getItem("displayDirectionPad") === "true") {
+    // direction pad pref from local storage
+    if (localStorage.getItem("snakeDisplayDirectionPad") === "true") {
       setDisplayDirectionPad(true);
     }
+
+    // high score from local storage
+    const highScore = localStorage.getItem("snakeHighScore") || "0";
+    setHighScore(parseInt(highScore));
 
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === "Enter" && buttonRef.current !== document.activeElement) {
@@ -89,6 +97,15 @@ const SnakeCanvas = observer(() => {
     };
   }, []);
 
+  useEffect(() => {
+    console.log("current score changed", gameRef.current?.score);
+
+    if (gameRef.current!.score > highScore) {
+      localStorage.setItem("snakeHighScore", gameRef.current!.score.toString());
+      setHighScore(gameRef.current!.score);
+    }
+  }, [gameRef.current?.score]);
+
   return (
     <>
       <div
@@ -100,7 +117,10 @@ const SnakeCanvas = observer(() => {
       </div>
       <FlexDiv $isVisible={!!gameRef.current} id="canvas-container">
         <SettingsDiv>
-          <h2>Score: {gameRef.current?.score || 0}</h2>
+          <h2>
+            Score: {gameRef.current?.score || 0}{" "}
+            <span>All time high: {highScore}</span>
+          </h2>
           <ToggleDiv>
             <p>
               <strong>Toggle Grid:</strong>
@@ -113,9 +133,9 @@ const SnakeCanvas = observer(() => {
                   checked={!!gameRef.current?.gridVisible}
                   onChange={() => {
                     if (gameRef.current?.gridVisible) {
-                      localStorage.setItem("gridVisible", "false");
+                      localStorage.setItem("snakeGridVisible", "false");
                     } else {
-                      localStorage.setItem("gridVisible", "true");
+                      localStorage.setItem("snakeGridVisible", "true");
                     }
 
                     gameRef.current?.setIsGridVisible(
@@ -144,7 +164,7 @@ const SnakeCanvas = observer(() => {
                     onChange={() => {
                       setDisplayDirectionPad(!displayDirectionPad);
                       localStorage.setItem(
-                        "displayDirectionPad",
+                        "snakeDisplayDirectionPad",
                         displayDirectionPad ? "false" : "true"
                       );
                     }}
