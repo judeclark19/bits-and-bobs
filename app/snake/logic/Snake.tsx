@@ -5,12 +5,14 @@ export default class Snake {
   game: Game;
   points: Point[] = [];
   bodyLength: number = 5;
+  canDirect: boolean;
   direction: "up" | "down" | "left" | "right" = "right";
 
   constructor(game: Game) {
     makeAutoObservable(this);
     this.game = game;
     this.points = this.init();
+    this.canDirect = true;
 
     // event listener for keydown
     window.addEventListener("keydown", (e) => {
@@ -48,7 +50,11 @@ export default class Snake {
       (newDirection === "left" && this.direction !== "right") ||
       (newDirection === "right" && this.direction !== "left")
     ) {
+      this.canDirect = false;
       this.direction = newDirection;
+      setTimeout(() => {
+        this.canDirect = true;
+      }, this.game.frameSpeed);
     }
   }
 

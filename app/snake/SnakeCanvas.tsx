@@ -40,14 +40,11 @@ const SnakeCanvas = observer(() => {
   };
 
   const handleResize = () => {
-    console.log("handle Resize");
     if (window.innerWidth < 645) {
-      console.log("small");
       setDisplayDirectionPadOption(false);
       setDisplayDirectionPad(true);
       localStorage.setItem("snakeDisplayDirectionPad", "true");
     } else {
-      console.log("large");
       setDisplayDirectionPadOption(true);
     }
   };

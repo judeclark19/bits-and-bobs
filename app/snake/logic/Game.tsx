@@ -17,6 +17,7 @@ export default class SnakeGameLogic {
   snake: Snake;
   apple: Apple;
   timer: NodeJS.Timeout | undefined;
+  frameSpeed: number;
   score: number = 0;
   endGameMessage: string = "Collided with wall";
   buttonText = "Start";
@@ -36,6 +37,7 @@ export default class SnakeGameLogic {
     this.snake = new Snake(this);
     this.apple = new Apple(this);
     this.timer;
+    this.frameSpeed = 140;
     this.isRunning = false;
     this.isPaused = false;
     this.gridVisible = true;
@@ -162,7 +164,7 @@ export default class SnakeGameLogic {
       if (!this.checkCollision()) {
         this.snake!.moveSnake();
       }
-    }, 140);
+    }, this.frameSpeed);
   }
 
   stopTimer() {
