@@ -26,6 +26,7 @@ export default class Snake {
   }
 
   changeDirection(newDirection: "up" | "down" | "left" | "right") {
+    if (!this.canDirect) return;
     if (
       (newDirection === "up" && this.direction !== "down") ||
       (newDirection === "down" && this.direction !== "up") ||
@@ -34,9 +35,6 @@ export default class Snake {
     ) {
       this.canDirect = false;
       this.direction = newDirection;
-      setTimeout(() => {
-        this.canDirect = true;
-      }, this.game.frameSpeed);
     }
   }
 

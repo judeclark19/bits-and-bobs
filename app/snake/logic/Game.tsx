@@ -188,6 +188,7 @@ class SnakeGameLogic {
 
   startTimer() {
     this.timer = setInterval(() => {
+      this.snake.canDirect = true;
       if (!this.checkCollision()) {
         this.snake!.moveSnake();
       }
