@@ -95,8 +95,6 @@ const SnakeCanvas = observer(() => {
   }, []);
 
   useEffect(() => {
-    console.log("current score changed", gameRef.current?.score);
-
     if (gameRef.current!.score > highScore) {
       localStorage.setItem("snakeHighScore", gameRef.current!.score.toString());
       setHighScore(gameRef.current!.score);

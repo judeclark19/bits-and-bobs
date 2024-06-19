@@ -114,7 +114,6 @@ export default class SnakeGameLogic {
   }
 
   welcomeScreen() {
-    console.log("show welcome screen");
     this.context!.fillStyle = "black";
     this.context!.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 

@@ -20,12 +20,6 @@ export default class CellClass {
     return this.tile.value == tile.value && !this.incomingTile;
   }
 
-  cleanUp() {
-    console.log("Transition end", this.incomingTile);
-    this.incomingTile?.tileEl.remove();
-    this.incomingTile = null;
-  }
-
   mergeIn(incomingTile: TileClass) {
     if (!this.tile) return;
     this.incomingTile = incomingTile;
