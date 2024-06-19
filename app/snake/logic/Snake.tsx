@@ -2,35 +2,17 @@ import { makeAutoObservable } from "mobx";
 import Game, { Point } from "./Game";
 
 export default class Snake {
-  game: Game;
+  game: typeof Game;
   points: Point[] = [];
   bodyLength: number = 5;
   canDirect: boolean;
   direction: "up" | "down" | "left" | "right" = "right";
 
-  constructor(game: Game) {
+  constructor(game: typeof Game) {
     makeAutoObservable(this);
     this.game = game;
     this.points = this.init();
     this.canDirect = true;
-
-    // event listener for keydown
-    window.addEventListener("keydown", (e) => {
-      switch (e.key) {
-        case "ArrowUp":
-          this.changeDirection("up");
-          break;
-        case "ArrowDown":
-          this.changeDirection("down");
-          break;
-        case "ArrowLeft":
-          this.changeDirection("left");
-          break;
-        case "ArrowRight":
-          this.changeDirection("right");
-          break;
-      }
-    });
   }
   init(): Point[] {
     const centerY =
@@ -74,31 +56,31 @@ export default class Snake {
 
   drawSnake() {
     this.points.forEach(({ x, y }, i) => {
-      this.game.context.fillStyle = i === 0 ? "lime" : "green";
-      this.game.context.beginPath();
-      this.game.context.arc(
+      this.game.context!.fillStyle = i === 0 ? "lime" : "green";
+      this.game.context!.beginPath();
+      this.game.context!.arc(
         x + this.game.unitPx / 2,
         y + this.game.unitPx / 2,
         this.game.gameSize === "small" ? 4.2 : 10,
         0,
         2 * Math.PI
       );
-      this.game.context.fill();
+      this.game.context!.fill();
     });
   }
 
   eraseSnake() {
     this.points.forEach(({ x, y }) => {
-      this.game.context.fillStyle = "black";
-      this.game.context.beginPath();
-      this.game.context.arc(
+      this.game.context!.fillStyle = "black";
+      this.game.context!.beginPath();
+      this.game.context!.arc(
         x + this.game.unitPx / 2,
         y + this.game.unitPx / 2,
         this.game.gameSize === "small" ? 5 : 11,
         0,
         2 * Math.PI
       );
-      this.game.context.fill();
+      this.game.context!.fill();
     });
   }
 

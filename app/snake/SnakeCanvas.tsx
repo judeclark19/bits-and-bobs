@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
-import SnakeGameLogic from "./logic/Game";
+import snakeGameState from "./logic/Game";
 import {
   ControlButton,
   FlexDiv,
@@ -15,14 +15,13 @@ import DirectionPad from "../common-components/DirectionPad";
 const SnakeCanvas = observer(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const gameRef = useRef<SnakeGameLogic>();
   const [displayDirectionPadOption, setDisplayDirectionPadOption] =
     useState(true);
   const [displayDirectionPad, setDisplayDirectionPad] = useState(false);
   const [highScore, setHighScore] = useState(0);
 
   const getButtonColor = () => {
-    if (!gameRef.current?.isRunning || gameRef.current?.isPaused) {
+    if (snakeGameState.isRunning || snakeGameState.isPaused) {
       return "green";
     } else {
       return "blue";
@@ -30,12 +29,12 @@ const SnakeCanvas = observer(() => {
   };
 
   const handleButtonClick = () => {
-    if (!gameRef.current?.isRunning) {
-      gameRef.current?.startGame();
-    } else if (gameRef.current?.isPaused) {
-      gameRef.current?.resumeGame();
+    if (!snakeGameState.isRunning) {
+      snakeGameState.startGame();
+    } else if (snakeGameState.isPaused) {
+      snakeGameState.resumeGame();
     } else {
-      gameRef.current?.pauseGame();
+      snakeGameState.pauseGame();
     }
   };
 
@@ -50,14 +49,13 @@ const SnakeCanvas = observer(() => {
   };
 
   useEffect(() => {
-    // init game using canvas
-    if (canvasRef.current && !gameRef.current) {
-      gameRef.current = new SnakeGameLogic(canvasRef.current);
-    }
+    // Initialize the game state on the client side
+    if (!snakeGameState.isInitialized && canvasRef.current)
+      snakeGameState.initializeGame(canvasRef.current);
 
     // grid pref from local storage
     if (localStorage.getItem("snakeGridVisible") === "false") {
-      gameRef.current?.setIsGridVisible(false);
+      snakeGameState.setIsGridVisible(false);
     }
 
     // direction pad pref from local storage
@@ -79,7 +77,7 @@ const SnakeCanvas = observer(() => {
           e.key === "ArrowDown" ||
           e.key === "ArrowLeft" ||
           e.key === "ArrowRight") &&
-        gameRef.current?.isRunning
+        snakeGameState.isRunning
       ) {
         e.preventDefault();
       }
@@ -95,25 +93,25 @@ const SnakeCanvas = observer(() => {
   }, []);
 
   useEffect(() => {
-    if (gameRef.current!.score > highScore) {
-      localStorage.setItem("snakeHighScore", gameRef.current!.score.toString());
-      setHighScore(gameRef.current!.score);
+    if (snakeGameState.score > highScore) {
+      localStorage.setItem("snakeHighScore", snakeGameState.score.toString());
+      setHighScore(snakeGameState.score);
     }
-  }, [gameRef.current?.score]);
+  }, [snakeGameState.score]);
 
   return (
     <>
       <div
         style={{
-          display: gameRef.current ? "none" : "block"
+          display: snakeGameState.isInitialized ? "none" : "block"
         }}
       >
         Loading...
       </div>
-      <FlexDiv $isVisible={!!gameRef.current} id="canvas-container">
+      <FlexDiv $isVisible={!!snakeGameState} id="canvas-container">
         <SettingsDiv>
           <h2>
-            Score: {gameRef.current?.score || 0}{" "}
+            Score: {snakeGameState.score || 0}{" "}
             <span>All time high: {highScore}</span>
           </h2>
           <ToggleDiv>
@@ -125,16 +123,16 @@ const SnakeCanvas = observer(() => {
               <label className="switch">
                 <input
                   type="checkbox"
-                  checked={!!gameRef.current?.gridVisible}
+                  checked={!!snakeGameState.gridVisible}
                   onChange={() => {
-                    if (gameRef.current?.gridVisible) {
+                    if (snakeGameState.gridVisible) {
                       localStorage.setItem("snakeGridVisible", "false");
                     } else {
                       localStorage.setItem("snakeGridVisible", "true");
                     }
 
-                    gameRef.current?.setIsGridVisible(
-                      !gameRef.current?.gridVisible
+                    snakeGameState.setIsGridVisible(
+                      !snakeGameState.gridVisible
                     );
                   }}
                 />
@@ -179,30 +177,30 @@ const SnakeCanvas = observer(() => {
             }}
             $color={getButtonColor()}
           >
-            {gameRef.current?.buttonText || "Start"}
+            {snakeGameState.buttonText || "Start"}
           </ControlButton>
 
           <DirectionPad
             displayDirectionPad={displayDirectionPad}
-            disabled={!gameRef.current?.isRunning || gameRef.current.isPaused}
+            disabled={!snakeGameState.isRunning || snakeGameState.isPaused}
             upFunction={() => {
-              gameRef.current?.snake.changeDirection("up");
+              snakeGameState.snake.changeDirection("up");
             }}
             leftFunction={() => {
-              gameRef.current?.snake.changeDirection("left");
+              snakeGameState.snake.changeDirection("left");
             }}
             rightFunction={() => {
-              gameRef.current?.snake.changeDirection("right");
+              snakeGameState.snake.changeDirection("right");
             }}
             downFunction={() => {
-              gameRef.current?.snake.changeDirection("down");
+              snakeGameState.snake.changeDirection("down");
             }}
           />
         </SettingsDiv>
         <canvas
           ref={canvasRef}
-          width={gameRef.current?.canvasWidth}
-          height={gameRef.current?.canvasHeight}
+          width={snakeGameState.canvasWidth}
+          height={snakeGameState.canvasHeight}
           style={{
             border: "2px solid gray",
             borderRadius: "0.25rem",

@@ -4,13 +4,14 @@ import Apple from "./Apple";
 
 export type Point = { x: number; y: number };
 
-export default class SnakeGameLogic {
+class SnakeGameLogic {
+  isInitialized: boolean = false;
   isRunning: boolean = false;
   isPaused: boolean = false;
   gridVisible: boolean = true;
-  context: CanvasRenderingContext2D;
+  context: CanvasRenderingContext2D | null;
   gameSize: "large" | "small" = "large";
-  canvas: HTMLCanvasElement;
+  canvas: HTMLCanvasElement | null;
   canvasWidth: number;
   canvasHeight: number;
   unitPx: number;
@@ -22,15 +23,11 @@ export default class SnakeGameLogic {
   endGameMessage: string = "Collided with wall";
   buttonText = "Start";
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor() {
     makeAutoObservable(this);
-    this.canvas = canvas;
-    const context = canvas.getContext("2d");
-    if (!context) {
-      throw new Error("Failed to get 2D context");
-    }
-    this.context = context;
-    this.gameSize = window.innerWidth < 645 ? "small" : "large";
+    this.canvas = null;
+    this.context = null;
+    this.gameSize = "small";
     this.canvasWidth = this.gameSize === "small" ? 300 : 600;
     this.canvasHeight = this.gameSize === "small" ? 300 : 600;
     this.unitPx = this.gameSize === "small" ? 12 : 24;
@@ -41,16 +38,29 @@ export default class SnakeGameLogic {
     this.isRunning = false;
     this.isPaused = false;
     this.gridVisible = true;
+  }
 
+  initializeGame(canvas: HTMLCanvasElement) {
+    console.log("Initializing game");
+    this.canvas = canvas;
+    const context = canvas.getContext("2d");
+    if (!context) {
+      throw new Error("Failed to get 2D context");
+    }
+    this.context = context;
+    this.gameSize = window.innerWidth < 645 ? "small" : "large";
     setTimeout(() => {
       this.welcomeScreen();
     }, 10);
+    this.canvasHeight = window.innerWidth < 645 ? 300 : 600;
+    this.canvasWidth = window.innerWidth < 645 ? 300 : 600;
+    this.unitPx = window.innerWidth < 645 ? 12 : 24;
 
     // add event listener for window resize
     window.addEventListener("resize", () => {
       if (window.innerWidth < 645 && this.gameSize === "large") {
         // make game small
-        this.canvas.remove();
+        this.canvas!.remove();
         this.gameSize = "small";
         this.canvasWidth = 300;
         this.canvasHeight = 300;
@@ -59,7 +69,7 @@ export default class SnakeGameLogic {
         this.redrawCanvas();
       } else if (window.innerWidth >= 645 && this.gameSize === "small") {
         // make game large
-        this.canvas.remove();
+        this.canvas!.remove();
         this.gameSize = "large";
         this.canvasWidth = 600;
         this.canvasHeight = 600;
@@ -68,6 +78,25 @@ export default class SnakeGameLogic {
         this.redrawCanvas();
       }
     });
+
+    window.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "ArrowUp":
+          this.snake.changeDirection("up");
+          break;
+        case "ArrowDown":
+          this.snake.changeDirection("down");
+          break;
+        case "ArrowLeft":
+          this.snake.changeDirection("left");
+          break;
+        case "ArrowRight":
+          this.snake.changeDirection("right");
+          break;
+      }
+    });
+
+    this.isInitialized = true;
   }
 
   redrawCanvas() {
@@ -358,3 +387,6 @@ export default class SnakeGameLogic {
     );
   }
 }
+
+const snakeGameState = new SnakeGameLogic();
+export default snakeGameState;

@@ -83,7 +83,6 @@ class TFEGameLogic {
   }
 
   moveUp() {
-    console.log("Move up");
     this.slideTiles(this.getGridCellsByColumn());
   }
 
