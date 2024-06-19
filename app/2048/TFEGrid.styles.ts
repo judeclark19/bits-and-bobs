@@ -114,16 +114,17 @@ export const GridContainer = styled.div`
   }
 `;
 
-export const RestartButton = styled.button`
-  margin: auto;
+export const RestartButton = styled.div`
+  text-align: center;
 
-  margin-left: auto;
-  width: fit-content;
-  color: black;
-  font-size: 1.5rem;
+  button {
+    width: fit-content;
+    color: black;
+    font-size: 1.5rem;
 
-  @media screen and (max-width: 520px) {
-    font-size: 1rem;
+    @media screen and (max-width: 520px) {
+      font-size: 1rem;
+    }
   }
 `;
 

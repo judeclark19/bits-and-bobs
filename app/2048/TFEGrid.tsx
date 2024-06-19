@@ -25,8 +25,8 @@ const TFEGrid = observer(() => {
       <GlobalStyle />
       {!TFEGameState ? null : (
         <>
-          <RestartButton onClick={() => TFEGameState.restartGame()}>
-            Restart
+          <RestartButton>
+            <button onClick={() => TFEGameState.restartGame()}>Restart</button>
           </RestartButton>
           <GridContainer ref={gridContainerRef}>
             {TFEGameState.cells.map((cell, i) => (
