@@ -16,6 +16,7 @@ export const FlexDiv = styled.div<{
 
 export const SettingsDiv = styled.div`
   width: 300px;
+  height: fit-content;
   background-color: #170f5a;
   padding: 1rem;
   padding-bottom: 3rem;

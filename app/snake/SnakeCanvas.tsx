@@ -181,33 +181,35 @@ const SnakeCanvas = observer(() => {
             {snakeGameState.buttonText || "Start"}
           </ControlButton>
         </SettingsDiv>
-        <canvas
-          ref={canvasRef}
-          width={snakeGameState.canvasWidth}
-          height={snakeGameState.canvasHeight}
-          style={{
-            border: "2px solid gray",
-            borderRadius: "0.25rem",
-            boxShadow: "0 0 1rem 0.5rem rgba(0, 0, 0, 0.5)"
-          }}
-        />
+        <div>
+          <canvas
+            ref={canvasRef}
+            width={snakeGameState.canvasWidth}
+            height={snakeGameState.canvasHeight}
+            style={{
+              border: "2px solid gray",
+              borderRadius: "0.25rem",
+              boxShadow: "0 0 1rem 0.5rem rgba(0, 0, 0, 0.5)"
+            }}
+          />
 
-        <DirectionPad
-          displayDirectionPad={displayDirectionPad}
-          disabled={!snakeGameState.isRunning || snakeGameState.isPaused}
-          upFunction={() => {
-            snakeGameState.snake.changeDirection("up");
-          }}
-          leftFunction={() => {
-            snakeGameState.snake.changeDirection("left");
-          }}
-          rightFunction={() => {
-            snakeGameState.snake.changeDirection("right");
-          }}
-          downFunction={() => {
-            snakeGameState.snake.changeDirection("down");
-          }}
-        />
+          <DirectionPad
+            displayDirectionPad={displayDirectionPad}
+            disabled={!snakeGameState.isRunning || snakeGameState.isPaused}
+            upFunction={() => {
+              snakeGameState.snake.changeDirection("up");
+            }}
+            leftFunction={() => {
+              snakeGameState.snake.changeDirection("left");
+            }}
+            rightFunction={() => {
+              snakeGameState.snake.changeDirection("right");
+            }}
+            downFunction={() => {
+              snakeGameState.snake.changeDirection("down");
+            }}
+          />
+        </div>
       </FlexDiv>
     </>
   );
