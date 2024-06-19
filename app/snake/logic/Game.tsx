@@ -41,7 +41,6 @@ class SnakeGameLogic {
   }
 
   initializeGame(canvas: HTMLCanvasElement) {
-    console.log("Initializing game");
     this.canvas = canvas;
     const context = canvas.getContext("2d");
     if (!context) {

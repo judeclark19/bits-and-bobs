@@ -5,10 +5,10 @@ import Snake from "./Snake";
 export default class Apple {
   x: number;
   y: number;
-  game: Game;
+  game: typeof Game;
   snake: Snake;
 
-  constructor(game: Game) {
+  constructor(game: typeof Game) {
     makeAutoObservable(this);
     this.x = 0;
     this.y = 0;
@@ -63,15 +63,15 @@ export default class Apple {
       this.randomizeApplePosition();
     }
 
-    this.game.context.fillStyle = "red";
-    this.game.context.beginPath();
-    this.game.context.arc(
+    this.game.context!.fillStyle = "red";
+    this.game.context!.beginPath();
+    this.game.context!.arc(
       this.x + this.game.unitPx / 2,
       this.y + this.game.unitPx / 2,
       this.game.gameSize === "small" ? 4.5 : 10,
       0,
       2 * Math.PI
     );
-    this.game.context.fill();
+    this.game.context!.fill();
   }
 }
