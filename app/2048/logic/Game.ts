@@ -27,7 +27,6 @@ class TFEGameLogic {
   }
 
   spawnRandomTile() {
-    console.log("Spawn");
     const emptyCell = this.getRandomEmptyCell();
     if (!emptyCell) {
       return;
@@ -160,16 +159,14 @@ class TFEGameLogic {
     if (this.cells.some((cell) => !cell.tile)) {
       return;
     }
-
-    const isGameOver = this.cells.some((cell) => {
-      const currentTile = cell.tile!;
+    const isMergePossible = this.cells.some((cell) => {
       const neighbors = this.getNeighbors(cell);
       return neighbors.some(
-        (neighbor) => neighbor.tile && neighbor.tile.value === currentTile.value
+        (neighbor) => neighbor.tile?.value === cell.tile?.value
       );
     });
 
-    if (isGameOver) {
+    if (!isMergePossible) {
       document.getElementById("TFE-game-over")!.style.display = "flex";
       this.gameOver = true;
     }

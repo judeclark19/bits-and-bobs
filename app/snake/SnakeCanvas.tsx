@@ -5,12 +5,12 @@ import { observer } from "mobx-react-lite";
 import SnakeGameLogic from "./logic/Game";
 import {
   ControlButton,
-  DirectionPad,
   FlexDiv,
   SettingsDiv,
   SwitchDiv,
   ToggleDiv
 } from "./SnakeCanvas.styles";
+import DirectionPad from "../common-components/DirectionPad";
 
 const SnakeCanvas = observer(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -184,61 +184,22 @@ const SnakeCanvas = observer(() => {
             {gameRef.current?.buttonText || "Start"}
           </ControlButton>
 
-          <DirectionPad $display={displayDirectionPad}>
-            <div></div>
-            <div>
-              <button
-                disabled={
-                  !gameRef.current?.isRunning || gameRef.current.isPaused
-                }
-                onClick={() => {
-                  gameRef.current?.snake.changeDirection("up");
-                }}
-              >
-                ↑
-              </button>
-            </div>
-            <div></div>
-            <div>
-              <button
-                disabled={
-                  !gameRef.current?.isRunning || gameRef.current.isPaused
-                }
-                onClick={() => {
-                  gameRef.current?.snake.changeDirection("left");
-                }}
-              >
-                ←
-              </button>
-            </div>
-            <div></div>
-            <div>
-              <button
-                disabled={
-                  !gameRef.current?.isRunning || gameRef.current.isPaused
-                }
-                onClick={() => {
-                  gameRef.current?.snake.changeDirection("right");
-                }}
-              >
-                →
-              </button>
-            </div>
-            <div></div>
-            <div>
-              <button
-                disabled={
-                  !gameRef.current?.isRunning || gameRef.current.isPaused
-                }
-                onClick={() => {
-                  gameRef.current?.snake.changeDirection("down");
-                }}
-              >
-                ↓
-              </button>
-            </div>
-            <div></div>
-          </DirectionPad>
+          <DirectionPad
+            displayDirectionPad={displayDirectionPad}
+            disabled={!gameRef.current?.isRunning || gameRef.current.isPaused}
+            upFunction={() => {
+              gameRef.current?.snake.changeDirection("up");
+            }}
+            leftFunction={() => {
+              gameRef.current?.snake.changeDirection("left");
+            }}
+            rightFunction={() => {
+              gameRef.current?.snake.changeDirection("right");
+            }}
+            downFunction={() => {
+              gameRef.current?.snake.changeDirection("down");
+            }}
+          />
         </SettingsDiv>
         <canvas
           ref={canvasRef}

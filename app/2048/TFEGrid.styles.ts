@@ -114,6 +114,19 @@ export const GridContainer = styled.div`
   }
 `;
 
+export const RestartButton = styled.button`
+  margin: auto;
+
+  margin-left: auto;
+  width: fit-content;
+  color: black;
+  font-size: 1.5rem;
+
+  @media screen and (max-width: 520px) {
+    font-size: 1rem;
+  }
+`;
+
 export const Cell = styled.div`
   background-color: #aaa;
   width: 100%;

@@ -16,7 +16,7 @@ export default function TwentyFortyEightPage() {
       <h1>2048</h1>
       <p>
         Use arrow keys to shift all the tiles on the board, or if you are on a
-        touch device you can use the direction pad below.
+        touch device you can use the direction pad below the grid.
       </p>
       <TFEGrid />
     </div>
