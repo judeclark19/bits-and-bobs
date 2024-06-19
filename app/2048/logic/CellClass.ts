@@ -33,6 +33,7 @@ export default class CellClass {
 
     this.tile!.value *= 2;
     this.tile!.tileEl.innerHTML = this.tile!.value.toString();
+    this.tile!.tileEl.style.animation = "pulse 100ms";
     const backgroundBrightness = 100 - Math.log2(this.tile!.value) * 9;
     this.tile!.tileEl.style.setProperty(
       "--background-color-brightness",

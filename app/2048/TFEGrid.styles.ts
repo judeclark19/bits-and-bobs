@@ -76,6 +76,18 @@ export const GridContainer = styled.div`
         transform: scale(1);
       }
     }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
   }
 
   #TFE-game-over {
