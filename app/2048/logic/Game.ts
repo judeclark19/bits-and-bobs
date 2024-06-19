@@ -8,10 +8,102 @@ class TFEGameLogic {
   tiles: TileClass[] = [];
   isInitialized = false;
   gameOver = false;
+  touchstartX = 0;
+  touchstartY = 0;
+  touchendX = 0;
+  touchendY = 0;
+  threshold = 50;
 
   constructor() {
     makeAutoObservable(this);
     this.initCells();
+  }
+
+  initializeGame(gridContainer: HTMLDivElement) {
+    this.gridContainer = gridContainer;
+    if (!this.isInitialized) {
+      this.isInitialized = true;
+      this.initKeyboardListeners();
+      this.spawnRandomTile();
+      this.spawnRandomTile();
+    }
+  }
+
+  initKeyboardListeners() {
+    window.addEventListener("keydown", (e) => {
+      if (this.gameOver) return;
+
+      switch (e.key) {
+        case "ArrowUp":
+          this.moveUp();
+          break;
+        case "ArrowDown":
+          this.moveDown();
+          break;
+        case "ArrowLeft":
+          this.moveLeft();
+          break;
+        case "ArrowRight":
+          this.moveRight();
+          break;
+      }
+    });
+
+    document.addEventListener("touchstart", (e) => {
+      this.touchstartX = e.changedTouches[0].screenX;
+      this.touchstartY = e.changedTouches[0].screenY;
+    });
+
+    document.addEventListener(
+      "touchmove",
+      (e) => {
+        // check if touchstart position is inside of this.gridContainer
+        if (
+          this.touchstartX < this.gridContainer!.offsetLeft ||
+          this.touchstartX >
+            this.gridContainer!.offsetLeft + this.gridContainer!.offsetWidth ||
+          this.touchstartY < this.gridContainer!.offsetTop ||
+          this.touchstartY >
+            this.gridContainer!.offsetTop + this.gridContainer!.offsetHeight
+        ) {
+          // swipe outside the grid, do nothing
+          return;
+        }
+
+        // If swipe inside the grid, Prevent the default behavior to stop page scrolling
+        e.preventDefault();
+      },
+      { passive: false }
+    );
+
+    document.addEventListener("touchend", (e) => {
+      this.touchendX = e.changedTouches[0].screenX;
+      this.touchendY = e.changedTouches[0].screenY;
+      this.handleGesture();
+    });
+  }
+
+  handleGesture() {
+    const deltaX = this.touchendX - this.touchstartX;
+    const deltaY = this.touchendY - this.touchstartY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (Math.abs(deltaX) > this.threshold) {
+        if (deltaX > 0) {
+          this.moveRight();
+        } else {
+          this.moveLeft();
+        }
+      }
+    } else {
+      if (Math.abs(deltaY) > this.threshold) {
+        if (deltaY > 0) {
+          this.moveDown();
+        } else {
+          this.moveUp();
+        }
+      }
+    }
   }
 
   initCells() {
@@ -49,37 +141,6 @@ class TFEGameLogic {
   getRandomEmptyCell() {
     const emptyCells = this.cells.filter((cell) => !cell.tile);
     return emptyCells[Math.floor(Math.random() * emptyCells.length)];
-  }
-
-  initializeGame(gridContainer: HTMLDivElement) {
-    this.gridContainer = gridContainer;
-    if (!this.isInitialized) {
-      this.isInitialized = true;
-      this.initKeyboardListeners();
-      this.spawnRandomTile();
-      this.spawnRandomTile();
-    }
-  }
-
-  initKeyboardListeners() {
-    window.addEventListener("keydown", (e) => {
-      if (this.gameOver) return;
-
-      switch (e.key) {
-        case "ArrowUp":
-          this.moveUp();
-          break;
-        case "ArrowDown":
-          this.moveDown();
-          break;
-        case "ArrowLeft":
-          this.moveLeft();
-          break;
-        case "ArrowRight":
-          this.moveRight();
-          break;
-      }
-    });
   }
 
   moveUp() {
@@ -166,7 +227,10 @@ class TFEGameLogic {
     });
 
     if (!isMergePossible) {
-      document.getElementById("TFE-game-over")!.style.display = "flex";
+      setTimeout(() => {
+        document.getElementById("TFE-game-over")!.style.display = "flex";
+      }, 100);
+
       this.gameOver = true;
     }
   }

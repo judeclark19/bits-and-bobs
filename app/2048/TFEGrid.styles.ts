@@ -65,29 +65,6 @@ export const GridContainer = styled.div`
         (var(--tile-x) + 1) * 11px + var(--tile-x) * 57px - var(--tile-x) * 1px
       );
     }
-
-    @keyframes appear {
-      0% {
-        opacity: 0.5;
-        transform: scale(0);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.2);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
   }
 
   #TFE-game-over {
@@ -103,6 +80,7 @@ export const GridContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    animation: appear 0.2s ease-in-out;
 
     span {
       color: white;
@@ -122,6 +100,29 @@ export const GridContainer = styled.div`
       @media screen and (max-width: 520px) {
         font-size: 1rem;
       }
+    }
+  }
+
+  @keyframes appear {
+    0% {
+      opacity: 0.5;
+      transform: scale(0);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
     }
   }
 `;
