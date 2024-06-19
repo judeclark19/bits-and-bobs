@@ -9,16 +9,22 @@ export const metadata: Metadata = {
 
 export default function TwentyFortyEightPage() {
   return (
-    <div>
+    <>
       <div style={{ backgroundColor: "#333", padding: "1rem" }}>
         <Link href="/">← Back to home</Link>
       </div>
-      <h1>2048</h1>
-      <p>
-        Use arrow keys to shift all the tiles on the board, or if you are on a
-        touch device you can use the direction pad below the grid.
-      </p>
+      <div
+        style={{
+          padding: "20px"
+        }}
+      >
+        <h1>2048</h1>
+        <p>
+          Use arrow keys to shift all the tiles on the board, or if you are on a
+          touch device you can use the direction pad below the grid.
+        </p>
+      </div>
       <TFEGrid />
-    </div>
+    </>
   );
 }

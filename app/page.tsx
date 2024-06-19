@@ -8,21 +8,27 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      <h1>Bits and Bobs</h1>
-      <ul
+      <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem"
+          padding: "20px"
         }}
       >
-        <li>
-          <Link href="/snake">Snake →</Link>
-        </li>
-        <li>
-          <Link href="/2048">2048 →</Link>
-        </li>
-      </ul>
+        <h1>Bits and Bobs</h1>
+        <ul
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem"
+          }}
+        >
+          <li>
+            <Link href="/snake">Snake →</Link>
+          </li>
+          <li>
+            <Link href="/2048">2048 →</Link>
+          </li>
+        </ul>
+      </div>
     </main>
   );
 }

@@ -106,8 +106,8 @@ class SnakeGameLogic {
     canvas.style.border = "2px solid gray";
     canvas.style.borderRadius = "0.25rem";
 
-    // Append new canvas to DOM
-    document.getElementById("canvas-container")!.appendChild(canvas);
+    // Prepend new canvas to DOM
+    document.getElementById("canvas-container")!.prepend(canvas);
 
     // Set new canvas and context
     this.canvas = canvas;

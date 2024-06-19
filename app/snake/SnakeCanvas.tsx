@@ -109,7 +109,7 @@ const SnakeCanvas = observer(() => {
       >
         Loading...
       </div>
-      <FlexDiv $isVisible={!!snakeGameState} id="canvas-container">
+      <FlexDiv $isVisible={!!snakeGameState}>
         <SettingsDiv>
           <h2>
             Score: {snakeGameState.score || 0}{" "}
@@ -181,7 +181,7 @@ const SnakeCanvas = observer(() => {
             {snakeGameState.buttonText || "Start"}
           </ControlButton>
         </SettingsDiv>
-        <div>
+        <div id="canvas-container">
           <canvas
             ref={canvasRef}
             width={snakeGameState.canvasWidth}

@@ -6,6 +6,7 @@ export const FlexDiv = styled.div<{
   display: ${(props) => (props.$isVisible ? "flex" : "none")};
   gap: 3rem;
   flex-wrap: wrap;
+  justify-content: center;
 
   @media (max-width: 645px) {
     gap: 0;
