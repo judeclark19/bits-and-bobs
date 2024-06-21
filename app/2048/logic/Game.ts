@@ -31,7 +31,7 @@ class TFEGameLogic {
 
   initKeyboardListeners() {
     window.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && this.gameOver) {
+      if (e.key === "Enter") {
         this.restartGame();
         return;
       }
@@ -265,12 +265,22 @@ class TFEGameLogic {
   }
 
   restartGame() {
+    if (!this.gameOver && !confirm("Restart game?")) {
+      return;
+    }
+
     this.cells.forEach((cell) => {
       if (cell.tile) {
         cell.tile.tileEl.remove();
         cell.tile = null;
       }
+
+      if (cell.incomingTile) {
+        cell.incomingTile.tileEl.remove();
+        cell.incomingTile = null;
+      }
     });
+
     this.gameOver = false;
     document.getElementById("TFE-game-over")!.style.display = "none";
     this.spawnRandomTile();
