@@ -31,19 +31,27 @@ class TFEGameLogic {
 
   initKeyboardListeners() {
     window.addEventListener("keydown", (e) => {
-      if (this.gameOver) return;
+      if (e.key === "Enter" && this.gameOver) {
+        this.restartGame();
+        return;
+      }
 
+      if (this.gameOver) return;
       switch (e.key) {
         case "ArrowUp":
+          e.preventDefault();
           this.moveUp();
           break;
         case "ArrowDown":
+          e.preventDefault();
           this.moveDown();
           break;
         case "ArrowLeft":
+          e.preventDefault();
           this.moveLeft();
           break;
         case "ArrowRight":
+          e.preventDefault();
           this.moveRight();
           break;
       }

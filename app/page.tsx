@@ -2,7 +2,12 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Bits and Bobs"
+  title: "Bits and Bobs",
+  icons: {
+    icon: ["/favicon.ico"],
+    apple: ["/apple-touch-icon.png"],
+    shortcut: ["/apple-touch-icon.png"]
+  }
 };
 
 export default function Home() {
