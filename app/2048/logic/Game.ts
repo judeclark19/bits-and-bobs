@@ -5,7 +5,6 @@ import CellClass from "./CellClass";
 class TFEGameLogic {
   gridContainer: HTMLDivElement | null = null;
   cells: CellClass[] = [];
-  tiles: TileClass[] = [];
   isInitialized = false;
   gameOver = false;
   touchstartX = 0;
@@ -120,10 +119,6 @@ class TFEGameLogic {
         this.cells.push(new CellClass(x, y));
       }
     }
-  }
-
-  setTiles(tiles: TileClass[]) {
-    this.tiles = tiles;
   }
 
   spawnRandomTile() {
