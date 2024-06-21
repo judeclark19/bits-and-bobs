@@ -23,10 +23,10 @@ export default class CellClass {
   mergeIn(incomingTile: TileClass) {
     if (!this.tile) return;
     this.incomingTile = incomingTile;
-    this.incomingTile.tileEl.addEventListener("transitionend", () => {
-      this.incomingTile?.tileEl.remove();
+    setTimeout(() => {
+      incomingTile.tileEl.remove();
       this.incomingTile = null;
-    });
+    }, 100);
     this.incomingTile.setZ(0);
     this.incomingTile.setX(this.x);
     this.incomingTile.setY(this.y);
