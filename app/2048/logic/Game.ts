@@ -12,6 +12,8 @@ class TFEGameLogic {
   touchendX = 0;
   touchendY = 0;
   threshold = 50;
+  wins = 0;
+  boardIsWon = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -215,6 +217,19 @@ class TFEGameLogic {
     if (hasMoved) {
       this.spawnRandomTile();
       this.checkGameOver();
+      this.checkFor2048();
+    }
+  }
+
+  checkFor2048() {
+    if (this.boardIsWon) {
+      return;
+    }
+
+    if (this.cells.some((cell) => cell.tile?.value === 2048)) {
+      this.boardIsWon = true;
+      this.wins++;
+      localStorage.setItem("TFE-wins", this.wins.toString());
     }
   }
 
@@ -260,6 +275,10 @@ class TFEGameLogic {
   }
 
   restartGame() {
+    if (!window.location.pathname.endsWith("/2048")) {
+      return;
+    }
+
     if (!this.gameOver && !confirm("Restart game?")) {
       return;
     }
@@ -278,8 +297,13 @@ class TFEGameLogic {
 
     this.gameOver = false;
     document.getElementById("TFE-game-over")!.style.display = "none";
+    this.boardIsWon = false;
     this.spawnRandomTile();
     this.spawnRandomTile();
+  }
+
+  setWins(wins: number) {
+    this.wins = wins;
   }
 }
 
