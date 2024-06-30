@@ -18,6 +18,7 @@ const GlobalStyles = createGlobalStyle`
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
   }
 
   body::before {
@@ -30,8 +31,8 @@ const GlobalStyles = createGlobalStyle`
     background-image: url(${ccLogo.src});
     background-repeat: repeat;
     background-size: 100px 100px;
-    opacity: 0.125; /* Set the opacity to 20% */
-    z-index: -1; /* Ensure it is behind the body content */
+    opacity: 0.09;
+    z-index: -1;
   }
 
   main {

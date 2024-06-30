@@ -2,6 +2,8 @@
 
 import StyledComponentsRegistry from "@/lib/registry";
 import GlobalStyles from "@/styles/GlobalStyles";
+import Image from "next/image";
+import ccLogo from "@/public/cc-logo.png";
 
 export default function RootLayout({
   children
@@ -23,8 +25,13 @@ export default function RootLayout({
                 </strong>
                 &nbsp;creation
               </div>
-              <div className="vertical-line">|</div>
-              <hr />
+              <Image
+                src={ccLogo}
+                alt="Code Couture logo"
+                width={20}
+                height={20}
+              />
+              {/* <hr /> */}
               <div>
                 Built by
                 <strong>
