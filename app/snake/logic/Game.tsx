@@ -99,6 +99,9 @@ class SnakeGameLogic {
   }
 
   redrawCanvas() {
+    if (!document.getElementById("canvas-container")) {
+      return;
+    }
     // Create and configure new canvas
     const canvas = document.createElement("canvas");
     canvas.height = this.canvasHeight;
