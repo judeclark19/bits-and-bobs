@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import TOCCard from "./common-components/TOCCard";
+// import SuggestionForm from "./common-components/SuggestionForm";
 
 import snakeDesktop from "../public/snake-desktop.jpg";
 import snakeMobile from "../public/snake-mobile.jpg";
@@ -59,6 +60,8 @@ export default function Home() {
             </Link>
           ))}
         </div>
+
+        {/* <SuggestionForm /> */}
       </div>
     </main>
   );

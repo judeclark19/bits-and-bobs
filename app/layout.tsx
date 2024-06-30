@@ -14,7 +14,6 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <GlobalStyles />
           <main>{children}</main>
-
           <footer>
             <div className="top">
               <div>
@@ -36,7 +35,7 @@ export default function RootLayout({
                 </strong>
               </div>
             </div>
-            <div className="bottom">Last updated June 25, 2024</div>
+            <div className="bottom">Last updated June 29, 2024</div>
           </footer>
         </StyledComponentsRegistry>
       </body>

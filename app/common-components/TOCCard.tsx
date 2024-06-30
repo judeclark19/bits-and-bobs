@@ -16,6 +16,7 @@ const TOCCardStyle = styled.div`
   align-items: center;
   gap: 1rem;
   box-shadow: 8px 8px 10px rgba(255, 255, 255, 0.1);
+  background-color: var(--violet);
 
   &:hover {
     transform: scale(1.02);
