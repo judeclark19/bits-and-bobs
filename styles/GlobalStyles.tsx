@@ -67,7 +67,7 @@ const GlobalStyles = createGlobalStyle`
    footer {
     padding: 30px 20px;
     background-color: #333;
-    margin-top: 4rem;
+    margin-top: 2rem;
     display: flex;
     flex-direction: column;
     gap: 20px;

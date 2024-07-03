@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import TFEGrid from "./TFEGrid";
+import BackToHome from "../common-components/BackToHome";
 
 export const metadata: Metadata = {
   title: "Bits and Bobs | 2048",
@@ -10,9 +10,7 @@ export const metadata: Metadata = {
 export default function TwentyFortyEightPage() {
   return (
     <>
-      <div style={{ backgroundColor: "#333", padding: "1rem" }}>
-        <Link href="/">← Back to home</Link>
-      </div>
+      <BackToHome />
       <div
         style={{
           padding: "20px"
