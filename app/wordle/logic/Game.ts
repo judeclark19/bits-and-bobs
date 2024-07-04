@@ -24,33 +24,26 @@ class WordleGameLogic {
     makeAutoObservable(this);
   }
 
-  initializeGame(guessingGrid: HTMLDivElement, keyboard: HTMLDivElement) {
-    this.guessingGrid = guessingGrid;
-    this.keyboard = keyboard;
-    if (!this.isInitialized) {
-      this.isInitialized = true;
-
-      this.buildGrid();
-      this.buildKeyboard();
-      this.setRandomTargetWord();
-      this.setUpKeyboardListeners();
-    }
+  initializeGame() {
+    this.buildGrid();
+    this.buildKeyboard();
+    this.setRandomTargetWord();
   }
 
-  setUpKeyboardListeners() {
-    window.addEventListener("keydown", (e) => {
-      if (this.keyboardDisabled) return;
-      if (e.key === "Enter") {
-        this.handleSelection("Enter");
-      } else if (e.key === "Backspace") {
-        this.handleSelection("Delete");
-      } else if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
-        this.handleSelection(e.key.toUpperCase());
-      }
-    });
+  setInitialized(initialized: boolean) {
+    this.isInitialized = initialized;
+  }
+
+  setGuessingGrid(guessingGrid: HTMLDivElement) {
+    this.guessingGrid = guessingGrid;
+  }
+
+  setKeyboard(keyboard: HTMLDivElement) {
+    this.keyboard = keyboard;
   }
 
   buildKeyboard() {
+    this.keyboard!.innerHTML = "";
     // build keyboard
     for (const row of keys) {
       const rowElement = document.createElement("div");
@@ -97,6 +90,8 @@ class WordleGameLogic {
   }
 
   buildGrid() {
+    this.guessingGrid!.innerHTML = "";
+    this.cells = [];
     // build grid
     for (let i = 0; i < 5; i++) {
       const cellRow = [];
@@ -147,6 +142,7 @@ class WordleGameLogic {
       }
       // Find first empty cell
       const emptyCell = this.cells[this.turns].find((cell) => !cell.letter);
+
       if (emptyCell) {
         emptyCell.setLetter(selection);
         this.currentGuess.push(selection);

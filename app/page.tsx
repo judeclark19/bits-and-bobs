@@ -59,7 +59,7 @@ export default function Home() {
           }}
         >
           {bitsAndBobs.map((b, i) => (
-            <Link key={i} href={b.href} passHref>
+            <Link key={i} href={b.href}>
               <TOCCard
                 name={b.name}
                 desktopImage={b.desktopImage.src}
