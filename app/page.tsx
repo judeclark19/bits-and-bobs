@@ -7,6 +7,8 @@ import snakeDesktop from "../public/snake-desktop.jpg";
 import snakeMobile from "../public/snake-mobile.jpg";
 import tfeDesktop from "../public/2048-desktop.jpg";
 import tfeMobile from "../public/2048-mobile.jpg";
+import wordleDesktop from "../public/wordle-desktop.png";
+import wordleMobile from "../public/wordle-mobile.png";
 import loremPicsum from "../public/lorem-picsum.jpg";
 
 export const metadata: Metadata = {
@@ -36,8 +38,8 @@ const bitsAndBobs = [
   {
     name: "Wordle",
     href: "/wordle",
-    desktopImage: loremPicsum,
-    mobileImage: loremPicsum,
+    desktopImage: wordleDesktop,
+    mobileImage: wordleMobile,
     alt: "Wordle clone"
   }
 ];
