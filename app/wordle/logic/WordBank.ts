@@ -2318,5 +2318,6 @@ export const wordBank = [
   "ricer",
   "frees",
   "baked",
-  "croon"
+  "croon",
+  "chimp"
 ];

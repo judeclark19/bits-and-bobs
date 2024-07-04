@@ -225,7 +225,9 @@ class WordleGameLogic {
         targetCompare[
           targetCompare.indexOf(this.currentGuess[i].toLowerCase())
         ] = "";
+        if (this.cells[this.turns][i].getBackgroundColor() !== wordleGreen) {
         this.cells[this.turns][i].setBackgroundColor(wordleYellow);
+        }
         key?.style.setProperty("background-color", wordleYellow);
       }
     }
