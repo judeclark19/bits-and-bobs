@@ -173,29 +173,7 @@ class WordleGameLogic {
         }, 800);
       });
     } else {
-      for (let i = 0; i < this.currentGuess.length; i++) {
-        const key = Array.from(this.keyboard!.querySelectorAll("button")).find(
-          (button) => button.textContent === this.currentGuess[i]
-        );
-
-        if (this.currentGuess[i].toLowerCase() === this.targetWord[i]) {
-          this.cells[this.turns][i].setBackgroundColor(wordleGreen);
-
-          key?.style.setProperty("background-color", wordleGreen);
-        } else if (
-          this.targetWord.split("").includes(this.currentGuess[i].toLowerCase())
-        ) {
-          this.cells[this.turns][i].setBackgroundColor(wordleYellow);
-
-          key?.style.setProperty("background-color", wordleYellow);
-        } else {
-          this.cells[this.turns][i].setBackgroundColor("var(--violet)");
-
-          key?.style.setProperty("background-color", "var(--violet)");
-          key?.setAttribute("disabled", "true");
-          this.disabledLetters.push(this.currentGuess[i]);
-        }
-      }
+      this.applyColors();
       this.currentGuess = [];
 
       if (wordToGuess === this.targetWord) {
@@ -207,15 +185,70 @@ class WordleGameLogic {
       } else {
         this.turns++;
 
-        if (this.turns === 5) {
+        if (this.turns >= 5) {
           this.setKeyboardDisabled(true);
           setTimeout(() => {
             this.setModalText(
               `You lose! The target word was ${this.targetWord.toUpperCase()}`
             );
-            this.setModalOpen;
+            this.setModalOpen(true);
           }, 300);
         }
+      }
+    }
+  }
+
+  applyColors() {
+    const targetCompare = this.targetWord.split("");
+
+    // green loop
+    for (let i = 0; i < this.currentGuess.length; i++) {
+      if (this.currentGuess[i].toLowerCase() === targetCompare[i]) {
+        const key = Array.from(this.keyboard!.querySelectorAll("button")).find(
+          (button) => button.textContent === this.currentGuess[i]
+        );
+
+        this.cells[this.turns][i].setBackgroundColor(wordleGreen);
+        targetCompare[i] = "";
+        key?.style.setProperty("background-color", wordleGreen);
+      }
+    }
+
+    // yellow loop
+    for (let i = 0; i < this.currentGuess.length; i++) {
+      const key = Array.from(this.keyboard!.querySelectorAll("button")).find(
+        (button) => button.textContent === this.currentGuess[i]
+      );
+
+      if (targetCompare.includes(this.currentGuess[i].toLowerCase())) {
+        // remove the matching letter in the targetArray with empty string
+        targetCompare[
+          targetCompare.indexOf(this.currentGuess[i].toLowerCase())
+        ] = "";
+        this.cells[this.turns][i].setBackgroundColor(wordleYellow);
+        key?.style.setProperty("background-color", wordleYellow);
+      }
+    }
+
+    // all other cells violet
+    for (let i = 0; i < this.currentGuess.length; i++) {
+      const key = Array.from(this.keyboard!.querySelectorAll("button")).find(
+        (button) => button.textContent === this.currentGuess[i]
+      );
+
+      if (
+        this.targetWord.split("").includes(this.currentGuess[i].toLowerCase())
+      ) {
+        if (this.cells[this.turns][i].getBackgroundColor() === "transparent") {
+          this.cells[this.turns][i].setBackgroundColor("var(--violet)");
+        }
+
+        continue;
+      } else {
+        key?.style.setProperty("background-color", "var(--violet)");
+        key?.setAttribute("disabled", "true");
+        this.disabledLetters.push(this.currentGuess[i]);
+        this.cells[this.turns][i].setBackgroundColor("var(--violet)");
       }
     }
   }

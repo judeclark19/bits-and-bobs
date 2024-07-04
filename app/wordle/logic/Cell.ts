@@ -4,6 +4,7 @@ export default class Cell {
   letter: string = "";
   gridCoords: number[] = [];
   cellElement: HTMLDivElement;
+  backgroundColor: string = "transparent";
 
   constructor(gridCoords: number[], cellElement: HTMLDivElement) {
     makeAutoObservable(this);
@@ -17,6 +18,11 @@ export default class Cell {
   }
 
   setBackgroundColor(color: string) {
+    this.backgroundColor = color;
     this.cellElement.style.backgroundColor = color;
+  }
+
+  getBackgroundColor() {
+    return this.backgroundColor;
   }
 }

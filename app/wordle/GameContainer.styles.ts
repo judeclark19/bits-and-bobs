@@ -26,7 +26,7 @@ export const Wrapper = styled.div`
 export const Shade = styled.div`
   position: absolute;
   left: 0px;
-  top: -4px;
+  top: 0;
   background-color: rgba(0, 0, 0, 0.8);
   width: 100%;
   height: 100%;
@@ -36,6 +36,7 @@ export const Shade = styled.div`
   align-items: center;
 
   p {
+    text-align: center;
     font-size: 24px;
   }
 
