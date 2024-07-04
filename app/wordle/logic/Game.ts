@@ -116,6 +116,12 @@ class WordleGameLogic {
 
   handleSelection(selection: string) {
     if (selection === "Enter") {
+      if (this.modalOpen) {
+        this.setModalOpen(false);
+        this.restartGame();
+        return;
+      }
+
       if (this.currentGuess.length === 5) {
         this.checkGuess();
       } else {
