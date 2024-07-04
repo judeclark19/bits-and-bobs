@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 
 export const wordleGreen = "#58A351";
 export const wordleYellow = "#F7DA22";
+export const wordleRed = "#D32F2F";
 
 export const Wrapper = styled.div`
   display: flex;

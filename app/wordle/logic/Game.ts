@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { wordBank } from "./WordBank";
 import Cell from "./Cell";
-import { wordleGreen, wordleYellow } from "../GameContainer.styles";
+import { wordleGreen, wordleRed, wordleYellow } from "../GameContainer.styles";
 
 const keys = [
   ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -121,7 +121,7 @@ class WordleGameLogic {
       } else {
         this.cells[this.turns].forEach((cell) => {
           if (!cell.letter) {
-            cell.cellElement.style.backgroundColor = "red";
+            cell.cellElement.style.backgroundColor = wordleRed;
 
             setTimeout(() => {
               cell.cellElement.style.backgroundColor = "transparent";
@@ -160,10 +160,10 @@ class WordleGameLogic {
     if (!wordBank.includes(wordToGuess)) {
       // not a valid word, turn cells red
       this.cells[this.turns].forEach((cell) => {
-        cell.cellElement.style.backgroundColor = "red";
+        cell.cellElement.style.backgroundColor = wordleRed;
 
         setTimeout(() => {
-          cell.cellElement.style.backgroundColor = "var(--violet)";
+          cell.cellElement.style.backgroundColor = "transparent";
         }, 800);
       });
     } else {
