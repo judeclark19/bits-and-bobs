@@ -43,6 +43,7 @@ const GameContainer = observer(() => {
 
     return () => {
       wordleGameState.setInitialized(false);
+      wordleGameState.disabledLetters = [];
       wordleGameState.turns = 0;
       wordleGameState.targetWord = "";
       wordleGameState.currentGuess = [];

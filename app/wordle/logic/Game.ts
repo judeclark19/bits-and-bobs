@@ -20,11 +20,13 @@ class WordleGameLogic {
   cells: Cell[][] = [];
   modalOpen: boolean = false;
   modalText: string = "";
+  disabledLetters: string[] = [];
   constructor() {
     makeAutoObservable(this);
   }
 
   initializeGame() {
+    this.disabledLetters = [];
     this.buildGrid();
     this.buildKeyboard();
     this.setRandomTargetWord();
@@ -137,7 +139,10 @@ class WordleGameLogic {
         this.currentGuess.pop();
       }
     } else {
-      if (this.currentGuess.length >= 5) {
+      if (
+        this.currentGuess.length >= 5 ||
+        this.disabledLetters.includes(selection)
+      ) {
         return;
       }
       // Find first empty cell
@@ -182,6 +187,7 @@ class WordleGameLogic {
 
           key?.style.setProperty("background-color", "var(--violet)");
           key?.setAttribute("disabled", "true");
+          this.disabledLetters.push(this.currentGuess[i]);
         }
       }
       this.currentGuess = [];
@@ -225,6 +231,8 @@ class WordleGameLogic {
   }
 
   restartGame() {
+    this.disabledLetters = [];
+
     this.cells.forEach((cellRow) => {
       cellRow.forEach((cell) => {
         cell.setLetter("");

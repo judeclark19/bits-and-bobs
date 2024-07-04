@@ -62,7 +62,7 @@ function TOCCard({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [desktopImage, mobileImage]);
 
   return (
     <TOCCardStyle>
