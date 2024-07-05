@@ -3,7 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import wordleGameState from "./logic/Game";
 import { observer } from "mobx-react-lite";
-import { GuessingGrid, Keyboard, Shade, Wrapper } from "./GameContainer.styles";
+import {
+  GuessingGrid,
+  Keyboard,
+  Shade,
+  wordleGreen,
+  wordleRed,
+  Wrapper
+} from "./GameContainer.styles";
 import Loader from "../common-components/Loader";
 import { FaInfoCircle } from "react-icons/fa";
 
@@ -93,7 +100,9 @@ const GameContainer = observer(() => {
 
       <div
         style={{
-          display: "flex"
+          display: "flex",
+          justifyContent: "center",
+          gap: "1rem"
         }}
       >
         <button
@@ -101,11 +110,22 @@ const GameContainer = observer(() => {
             wordleGameState.restartGame();
           }}
           style={{
-            backgroundColor: "#555",
+            backgroundColor: wordleGreen,
             width: "fit-content"
           }}
         >
           New Game
+        </button>
+        <button
+          onClick={() => {
+            wordleGameState.giveUp();
+          }}
+          style={{
+            backgroundColor: wordleRed,
+            width: "fit-content"
+          }}
+        >
+          Give Up
         </button>
         {process.env.NODE_ENV === "development" && (
           <button

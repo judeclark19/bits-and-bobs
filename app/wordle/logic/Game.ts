@@ -226,9 +226,9 @@ class WordleGameLogic {
           targetCompare.indexOf(this.currentGuess[i].toLowerCase())
         ] = "";
         if (this.cells[this.turns][i].getBackgroundColor() !== wordleGreen) {
-        this.cells[this.turns][i].setBackgroundColor(wordleYellow);
+          this.cells[this.turns][i].setBackgroundColor(wordleYellow);
+          key?.style.setProperty("background-color", wordleYellow);
         }
-        key?.style.setProperty("background-color", wordleYellow);
       }
     }
 
@@ -263,12 +263,18 @@ class WordleGameLogic {
     this.keyboardDisabled = disabled;
   }
 
-  setTargetWord(word: string) {
-    this.targetWord = word;
-  }
-
   setModalText(text: string) {
     this.modalText = text;
+  }
+
+  giveUp() {
+    this.setKeyboardDisabled(true);
+    setTimeout(() => {
+      this.setModalText(
+        `You gave up! The target word was ${this.targetWord.toUpperCase()}`
+      );
+      this.setModalOpen(true);
+    }, 300);
   }
 
   restartGame() {
