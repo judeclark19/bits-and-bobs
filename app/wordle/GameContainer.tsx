@@ -155,10 +155,10 @@ const GameContainer = observer(() => {
           marginTop: "4rem"
         }}
       >
-        <FaInfoCircle /> &nbsp; Plural forms of nouns consisting of the singular
-        form + &lsquo;s&rsquo; and verbs consiting of a four letter root +
-        &lsquo;s&rsquo; (ex: &ldquo;parks&rdquo;, &ldquo;suits&rdquo;,
-        &ldquo;wears&rdquo;) are not included in the word bank for this game.
+        <FaInfoCircle /> &nbsp; Words consiting of a four letter root +
+        &lsquo;s&rsquo; or &lsquo;d&rsquo; (ex: &ldquo;suits&rdquo;,
+        &ldquo;wears&rdquo;, &ldquo;baked&rdquo;, &ldquo;bakes&rdquo;) are not
+        included in the word bank for this game.
       </p>
     </Wrapper>
   );
