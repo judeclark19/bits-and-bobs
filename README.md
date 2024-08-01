@@ -6,3 +6,4 @@ Just a couple games for fun!
 
 - Snake
 - 2048
+- Wordle
