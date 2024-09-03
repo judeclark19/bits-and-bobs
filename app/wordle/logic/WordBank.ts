@@ -2317,7 +2317,6 @@ export const wordBank = [
   "rural",
   "shave",
   "ricer",
-  "frees",
   "croon",
   "chimp",
   "moped"
