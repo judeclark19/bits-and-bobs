@@ -7,10 +7,10 @@ import {
   ControlButton,
   FlexDiv,
   SettingsDiv,
-  SwitchDiv,
   ToggleDiv
 } from "./SnakeCanvas.styles";
 import DirectionPad from "../common-components/DirectionPad";
+import { SwitchDiv } from "../common-components/ToggleSwtichStyle";
 
 const SnakeCanvas = observer(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

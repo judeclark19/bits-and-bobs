@@ -31,7 +31,6 @@ export default function RootLayout({
                 width={20}
                 height={20}
               />
-              {/* <hr /> */}
               <div>
                 Built by
                 <strong>
@@ -42,7 +41,7 @@ export default function RootLayout({
                 </strong>
               </div>
             </div>
-            <div className="bottom">Last updated July 6, 2024</div>
+            <div className="bottom">Last updated September 15, 2024</div>
           </footer>
         </StyledComponentsRegistry>
       </body>

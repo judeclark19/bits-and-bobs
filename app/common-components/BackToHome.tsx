@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { styled } from "styled-components";
+import { bitsAndBobs } from "./ListOfBits";
 
 const ContainerStyle = styled.div`
   background-color: #333;
@@ -40,9 +41,11 @@ export default function BackToHome() {
           window.location.assign(e.target.value);
         }}
       >
-        <option value="/snake">Snake</option>
-        <option value="/2048">2048</option>
-        <option value="/wordle">Wordle</option>
+        {bitsAndBobs.map((b, i) => (
+          <option key={i} value={b.href}>
+            {b.name}
+          </option>
+        ))}
       </SelectStyle>
     </ContainerStyle>
   );
