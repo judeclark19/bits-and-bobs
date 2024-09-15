@@ -49,6 +49,8 @@ class MinesweeperCell {
   }
 
   flipFlag() {
+    if (this.game.gameOver) return;
+
     if (this.flagged) {
       this.flagged = false;
       this.cellElement!.textContent = "";
