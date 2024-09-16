@@ -110,7 +110,7 @@ class MinesweeperGameLogic {
         cell.cellElement!.classList.remove("covered");
         if (cell.bomb) {
           cell.cellElement!.style.backgroundColor = cell.flagged
-            ? "hotpink"
+            ? "lime"
             : "red";
           cell.cellElement!.textContent = "💣";
           cell.cellElement!.classList.add("vibrate");

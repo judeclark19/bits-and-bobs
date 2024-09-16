@@ -171,15 +171,18 @@ class MinesweeperCell {
     }
 
     // count how many cells on the board are still covered
-    let coveredCells = 0;
+    let coveredCells: MinesweeperCell[] = [];
     this.game.cells.forEach((row) => {
       row.forEach((cell) => {
         if (cell.covered) {
-          coveredCells++;
+          coveredCells.push(cell);
         }
       });
     });
-    if (coveredCells === this.game.numberOfBombs) {
+    if (
+      coveredCells.length === this.game.numberOfBombs &&
+      coveredCells.every((cell) => cell.bomb)
+    ) {
       this.game.winGame();
     }
   }
