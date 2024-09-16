@@ -9,6 +9,7 @@ class MinesweeperGameLogic {
   cellsAssigned = false;
   gameOver = false;
   numberOfBombs = 25;
+  flagsRemaining = this.numberOfBombs;
   mode: "digging" | "flagging" = "digging";
   boundRestartGame: (() => void) | null = null;
 

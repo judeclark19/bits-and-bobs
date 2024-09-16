@@ -54,9 +54,11 @@ class MinesweeperCell {
     if (this.flagged) {
       this.flagged = false;
       this.cellElement!.textContent = "";
+      this.game.flagsRemaining++;
     } else {
       this.flagged = true;
       this.cellElement!.textContent = "🚩";
+      this.game.flagsRemaining--;
     }
   }
 

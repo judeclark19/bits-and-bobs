@@ -3,74 +3,9 @@ import React, { useEffect, useRef } from "react";
 import MinesweeperGameState from "./logic/Game";
 import { observer } from "mobx-react-lite";
 import Loader from "../common-components/Loader";
-import { styled } from "styled-components";
+import { FlagCount, GridStyle, ResetButton } from "./MinesweeperGrid.styles";
+
 import { SwitchDiv } from "../common-components/ToggleSwtichStyle";
-
-const GridStyle = styled.div`
-  @keyframes vibrate {
-    0% {
-      transform: translate(0, 0);
-    }
-    25% {
-      transform: translate(2px, 2px);
-    }
-    50% {
-      transform: translate(0, 0);
-    }
-    75% {
-      transform: translate(-2px, -2px);
-    }
-    100% {
-      transform: translate(0, 0);
-    }
-  }
-
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(10, 32px);
-  grid-template-rows: repeat(15, 32px);
-  gap: 4px;
-  justify-content: center;
-  border: 2px solid #ccc;
-  width: fit-content;
-  margin: auto;
-  border-radius: 6px;
-  padding: 4px;
-  .cell {
-    border-radius: 2px;
-    display: grid;
-    place-items: center;
-    font-weight: bold;
-    font-size: 18px;
-    background-color: rgba(0, 0, 0, 0.3);
-
-    &.covered {
-      background-color: #ccc;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #aaa;
-      }
-    }
-
-    &.vibrate {
-      animation: vibrate 0.1s;
-      animation-iteration-count: 5;
-    }
-  }
-`;
-
-const ResetButton = styled.button`
-  background-color: transparent;
-  border: 2px outset black;
-  background-color: #333;
-  width: fit-content;
-  margin: auto;
-
-  &:active {
-    border-style: inset;
-  }
-`;
 
 const MinesweeperGrid = observer(() => {
   const gridContainerRef = useRef<HTMLDivElement>(null);
@@ -88,6 +23,10 @@ const MinesweeperGrid = observer(() => {
         <Loader />
       ) : (
         <>
+          <FlagCount>
+            🚩 Flags remaining:
+            <span id="flag-count">{MinesweeperGameState.flagsRemaining}</span>
+          </FlagCount>
           <GridStyle ref={gridContainerRef}>
             {/* populated by mobx */}
             {!MinesweeperGameState.isInitialized && <Loader />}
