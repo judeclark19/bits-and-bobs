@@ -145,6 +145,7 @@ class MinesweeperGameLogic {
     this.cellsAssigned = false;
     this.gameOver = false;
     this.gridContainer!.innerHTML = "";
+    this.flagsRemaining = this.numberOfBombs;
     this.resetButton?.removeEventListener("click", this.boundRestartGame!);
     this.initializeGame(this.gridContainer!);
   }
