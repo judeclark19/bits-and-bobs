@@ -103,22 +103,33 @@ class MinesweeperGameLogic {
     this.mode = "digging";
   }
 
-  loseGame() {
+  loseGame(cellElement: HTMLDivElement) {
+    console.log("lost game by clicking on cell", cellElement);
     this.gameOver = true;
     // turn all bombs red
     this.cells.forEach((row) => {
       row.forEach((cell) => {
         cell.cellElement!.classList.remove("covered");
-        if (cell.bomb) {
-          cell.cellElement!.style.backgroundColor = cell.flagged
-            ? "lime"
-            : "red";
-          cell.cellElement!.textContent = "💣";
+        if (cell.cellElement === cellElement) {
+          cell.cellElement.style.backgroundColor = "red";
           cell.cellElement!.classList.add("vibrate");
+        } else if (cell.bomb && !cell.flagged) {
+          cell.cellElement!.style.border = "1px solid red";
+          cell.cellElement!.textContent = "💣";
+        } else if (cell.bomb && cell.flagged) {
+          cell.cellElement!.style.backgroundColor = "lime";
+          cell.cellElement!.textContent = "💣";
         } else {
           cell.getBombCount();
           if (cell.covered) {
             cell.showBombCount();
+          }
+          if (cell.flagged) {
+            console.log("incorrect flag", cell);
+            const cross = document.createElement("div");
+            cross.classList.add("cross");
+            cross.textContent = "❌";
+            cell.cellElement!.appendChild(cross);
           }
         }
       });

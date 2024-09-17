@@ -52,6 +52,8 @@ export const GridStyle = styled.div`
     font-weight: bold;
     font-size: 18px;
     background-color: rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: background-color 0.1s;
 
     &.covered {
       background-color: #ccc;
@@ -65,6 +67,10 @@ export const GridStyle = styled.div`
     &.vibrate {
       animation: vibrate 0.1s;
       animation-iteration-count: 5;
+    }
+
+    .cross {
+      position: absolute;
     }
   }
 `;

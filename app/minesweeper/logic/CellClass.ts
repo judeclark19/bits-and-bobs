@@ -145,7 +145,7 @@ class MinesweeperCell {
 
     if (this.bomb) {
       this.cellElement!.textContent = "💣";
-      this.game.loseGame();
+      this.game.loseGame(this.cellElement!);
     } else if (this.bombCount === 0) {
       const directions = [
         [-1, 0], // top
