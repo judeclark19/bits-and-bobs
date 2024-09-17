@@ -104,7 +104,6 @@ class MinesweeperGameLogic {
   }
 
   loseGame(cellElement: HTMLDivElement) {
-    console.log("lost game by clicking on cell", cellElement);
     this.gameOver = true;
     // turn all bombs red
     this.cells.forEach((row) => {
@@ -125,7 +124,6 @@ class MinesweeperGameLogic {
             cell.showBombCount();
           }
           if (cell.flagged) {
-            console.log("incorrect flag", cell);
             const cross = document.createElement("div");
             cross.classList.add("cross");
             cross.textContent = "❌";
@@ -143,8 +141,13 @@ class MinesweeperGameLogic {
       row.forEach((cell) => {
         cell.cellElement!.classList.remove("covered");
         if (cell.bomb) {
-          cell.cellElement!.style.backgroundColor = "lime";
           cell.cellElement!.textContent = "💣";
+
+          if (cell.flagged) {
+            cell.cellElement!.style.backgroundColor = "lime";
+          } else {
+            cell.cellElement!.style.border = "1px solid lime";
+          }
         }
       });
     });
