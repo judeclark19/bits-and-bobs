@@ -13,7 +13,10 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#444067",
+  "background_color": "#050034",
+  "display": "standalone",
+  "start_url": "/",
+  "orientation": "portrait",
+  "description": "Mini games clones - Web app by Jude Clark"
 }
