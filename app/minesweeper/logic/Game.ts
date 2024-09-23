@@ -165,5 +165,5 @@ class MinesweeperGameLogic {
   }
 }
 
-const MinesweeperGameState = new MinesweeperGameLogic();
-export default MinesweeperGameState;
+const minesweeperGameState = new MinesweeperGameLogic();
+export default minesweeperGameState;

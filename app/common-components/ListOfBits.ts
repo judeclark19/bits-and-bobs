@@ -35,5 +35,12 @@ export const bitsAndBobs = [
     desktopImage: minesweeper,
     mobileImage: minesweeper,
     alt: "Minesweeper game"
+  },
+  {
+    name: "Sudoku",
+    href: "/sudoku",
+    desktopImage: loremPicsum,
+    mobileImage: loremPicsum,
+    alt: "Sudoku game"
   }
 ];

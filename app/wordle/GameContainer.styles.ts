@@ -17,7 +17,6 @@ export const Wrapper = styled.div`
 
   @media screen and (max-width: 768px) {
     width: 325px;
-    /* overflow-x: hidden; */
     max-width: 100vw;
     padding: 10px;
   }
@@ -61,8 +60,6 @@ export const GuessingGrid = styled.div`
 
   .cell {
     border: 2px solid var(--periwinkle);
-    /* background-color: var(--violet); */
-    /* background-color */
     width: 50px;
     height: 50px;
     display: flex;

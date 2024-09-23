@@ -5,6 +5,7 @@ const GlobalStyles = createGlobalStyle`
  :root {
   --navy: #050034;
   --violet: #444067;
+  --pharaoh: #636081;
   --periwinkle: #82809A;
   --gray: #C1C0CD;
  }
