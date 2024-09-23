@@ -4,7 +4,9 @@ import ccLogo from "../public/cc-logo.png"; // Import the image
 const GlobalStyles = createGlobalStyle`
  :root {
   --navy: #050034;
+  --space-cadet: #25204E;
   --violet: #444067;
+  --pharaoh: #636081;
   --periwinkle: #82809A;
   --gray: #C1C0CD;
  }

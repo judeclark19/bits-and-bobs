@@ -46,10 +46,10 @@ export const Tailspin = styled.div`
   border-radius: 50%;
 `;
 
-export default function Loader() {
+export default function Loader({ altText }: { altText?: string }) {
   return (
     <Wrapper>
-      Loading...
+      {altText ? `${altText}` : "Loading..."}
       <Tailspin />
     </Wrapper>
   );

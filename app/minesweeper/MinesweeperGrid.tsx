@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from "react";
-import MinesweeperGameState from "./logic/Game";
+import minesweeperGameState from "./logic/Game";
 import { observer } from "mobx-react-lite";
 import Loader from "../common-components/Loader";
 import { FlagCount, GridStyle, ResetButton } from "./MinesweeperGrid.styles";
@@ -12,24 +12,24 @@ const MinesweeperGrid = observer(() => {
 
   useEffect(() => {
     // Initialize the game state on the client side
-    if (!MinesweeperGameState.isInitialized && gridContainerRef.current) {
-      MinesweeperGameState.initializeGame(gridContainerRef.current);
+    if (!minesweeperGameState.isInitialized && gridContainerRef.current) {
+      minesweeperGameState.initializeGame(gridContainerRef.current);
     }
   }, []);
 
   return (
     <>
-      {!MinesweeperGameState ? (
+      {!minesweeperGameState ? (
         <Loader />
       ) : (
         <>
           <FlagCount>
             🚩 Flags remaining:
-            <span id="flag-count">{MinesweeperGameState.flagsRemaining}</span>
+            <span id="flag-count">{minesweeperGameState.flagsRemaining}</span>
           </FlagCount>
           <GridStyle ref={gridContainerRef}>
             {/* populated by mobx */}
-            {!MinesweeperGameState.isInitialized && <Loader />}
+            {!minesweeperGameState.isInitialized && <Loader />}
           </GridStyle>
           <div
             style={{
@@ -64,12 +64,12 @@ const MinesweeperGrid = observer(() => {
               <label className="switch">
                 <input
                   type="checkbox"
-                  checked={MinesweeperGameState.mode === "flagging"}
+                  checked={minesweeperGameState.mode === "flagging"}
                   onChange={() => {
-                    if (MinesweeperGameState.mode === "flagging") {
-                      MinesweeperGameState.switchToDiggingMode();
+                    if (minesweeperGameState.mode === "flagging") {
+                      minesweeperGameState.switchToDiggingMode();
                     } else {
-                      MinesweeperGameState.switchToFlaggingMode();
+                      minesweeperGameState.switchToFlaggingMode();
                     }
                   }}
                 />
