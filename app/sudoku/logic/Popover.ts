@@ -26,18 +26,11 @@ export class PopoverClass {
   }
 
   handlePopoverButtonClick(event: Event) {
-    console.log(
-      "handlePopoverButtonClick",
-      (event.target! as HTMLButtonElement).dataset.value,
-      this.game.activeCell
-    );
-
     const clickedValue = parseInt(
       (event.target! as HTMLButtonElement).dataset.value!
     );
     if (this.game.activeCell) {
       this.game.activeCell.setValue(clickedValue);
-      console.log("APPLY INPUT VALUE:", clickedValue.toString());
       this.game.activeCell.inputElement!.value =
         clickedValue === 0 ? "" : clickedValue.toString();
 

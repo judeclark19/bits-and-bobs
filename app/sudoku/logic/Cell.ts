@@ -34,8 +34,8 @@ export class CellClass {
       this.inputElement.max = "9";
       this.inputElement.value = "";
       this.inputElement.addEventListener("input", (e) => {
-        const value = parseInt((e.target as HTMLInputElement).value);
-        this.setValue(value);
+        const value = (e.target as HTMLInputElement).value;
+        this.setValue(value === "" ? 0 : parseInt(value));
       });
       this.cellElement.appendChild(this.inputElement);
     } else {
@@ -51,7 +51,6 @@ export class CellClass {
   }
 
   handleCellClick() {
-    console.log("CELL CLICK");
     if (!this.cellElement?.classList.contains("empty")) return;
     this.game.setCellActive(this.row, this.col);
     if (this.game.popover!.isOpen) {
@@ -67,11 +66,8 @@ export class CellClass {
   }
 
   setValue(value: number) {
-    console.log("setValue function called", value);
     this.value = value;
     this.game.board![this.row][this.col] = value;
-    console.log("updated this.board", toJS(this.game.board));
-
     this.game.checkForLockedNumbers();
   }
 }

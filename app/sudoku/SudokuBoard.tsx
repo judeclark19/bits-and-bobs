@@ -32,7 +32,8 @@ const SudokuBoard = observer(() => {
         <>
           <p
             style={{
-              padding: "20px"
+              padding: "20px",
+              lineHeight: "1.5"
             }}
           >
             This game gratefully makes use of the free API{" "}
@@ -45,7 +46,15 @@ const SudokuBoard = observer(() => {
             </strong>
             . Please exuse the long wait time in exchange for this being totally
             free. Thanks, Raghav!
-            {/* TODO: add link in readme */}
+          </p>
+          <p
+            style={{
+              padding: "20px",
+              lineHeight: "1.5"
+            }}
+          >
+            If you do not see a loading spinner or a game below, please refresh
+            the page!
           </p>
           <div ref={gameContainerRef}>
             <SudokuGridStyle id="sudoku-grid">

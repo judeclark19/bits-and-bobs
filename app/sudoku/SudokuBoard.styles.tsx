@@ -12,7 +12,7 @@ export const SudokuGridStyle = styled.div`
   gap: 0;
 
   .cell {
-    background-color: var(--periwinkle);
+    background-color: var(--violet);
     display: grid;
     place-items: center;
     font-size: calc(1rem + 2vw);
@@ -34,7 +34,7 @@ export const SudokuGridStyle = styled.div`
     }
 
     &.empty {
-      background-color: var(--violet);
+      background-color: var(--periwinkle);
 
       input {
         /* border: 2px solid red; */
@@ -71,7 +71,7 @@ export const SudokuGridStyle = styled.div`
     }
 
     &.locked {
-      background-color: var(--navy);
+      background-color: var(--violet);
     }
   }
 

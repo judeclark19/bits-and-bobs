@@ -28,7 +28,6 @@ export class SudokuGameLogic {
   ) {
     this.gameContainer = gameContainer;
     this.difficulty = difficulty;
-    console.log("initializeGame", this.difficulty);
     this.gridElement = gameContainer.querySelector("#sudoku-grid");
     this.popover = new PopoverClass(
       this,
@@ -58,74 +57,71 @@ export class SudokuGameLogic {
     }
   }
 
-  //   fetchNewBoard() {
-  //     console.log("fetchNewBoard", this.difficulty);
-
-  //     const fetchBoard = () => {
-  //       fetch("https://sudoku-api.vercel.app/api/dosuku")
-  //         .then((response) => {
-  //           if (response.status === 504) {
-  //             console.log("504, fetching again");
-  //             setTimeout(fetchBoard, 1000);
-  //           }
-  //           return response.json();
-  //         })
-  //         .then(({ newboard }) => {
-  //           const fetchedDifficulty = newboard.grids[0].difficulty;
-  //           if (fetchedDifficulty === this.difficulty) {
-  //             // this.board = newboard;
-  //             console.log("Sudoku board fetched:", newboard);
-  //             this.board = newboard.grids[0].value;
-  //             this.solution = newboard.grids[0].solution;
-  //             this.drawBoard();
-  //             runInAction(() => {
-  //               this.isLoading = false;
-  //             });
-  //           } else {
-  //             console.log("Difficulty does not match, fetching again");
-  //             setTimeout(fetchBoard, 1000); // Retry after 1 second
-  //             //   fetchBoard(); // Fetch again if difficulty does not match
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           // TODO: Handle api error
-
-  //           console.error("Error fetching Sudoku board:", error);
-  //         });
-  //     };
-  //     runInAction(() => {
-  //       this.isLoading = true;
-  //     });
-  //     fetchBoard();
-
-  //   }
-
   fetchNewBoard() {
-    this.board = [
-      [0, 2, 0, 3, 9, 0, 0, 0, 6],
-      [8, 0, 0, 0, 4, 5, 0, 0, 0],
-      [0, 0, 0, 0, 2, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 3, 0, 0, 0, 7, 8, 0],
-      [2, 9, 0, 7, 0, 0, 0, 5, 0],
-      [3, 0, 0, 0, 0, 0, 0, 0, 1],
-      [9, 0, 5, 0, 0, 1, 6, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 2, 0]
-    ];
-    this.solution = [
-      [5, 2, 1, 3, 9, 7, 8, 4, 6],
-      [8, 6, 7, 1, 4, 5, 2, 3, 9],
-      [4, 3, 9, 6, 2, 8, 5, 1, 7],
-      [1, 7, 4, 8, 5, 2, 9, 6, 3],
-      [6, 5, 3, 4, 1, 9, 7, 8, 2],
-      [2, 9, 8, 7, 6, 3, 1, 5, 4],
-      [3, 8, 2, 5, 7, 6, 4, 9, 1],
-      [9, 4, 5, 2, 3, 1, 6, 7, 8],
-      [7, 1, 6, 9, 8, 4, 3, 2, 5]
-    ];
-    this.isLoading = false;
-    this.drawBoard();
+    const fetchBoard = () => {
+      console.log(`Calling dosuku API, looking for ${this.difficulty} game`);
+      fetch(
+        "https://sudoku-api.vercel.app/api/dosuku?query={newboard(limit:20){grids{value,solution,difficulty}}}"
+      )
+        .then((response) => {
+          return response.json();
+        })
+        .then(({ newboard }) => {
+          const fetchedDifficulty = newboard.grids[0].difficulty;
+          const matchingDifficulty = newboard.grids.find(
+            (grid: any) => grid.difficulty === this.difficulty
+          );
+          if (matchingDifficulty) {
+            this.board = matchingDifficulty.value;
+            this.solution = matchingDifficulty.solution;
+            this.drawBoard();
+            runInAction(() => {
+              this.isLoading = false;
+            });
+          } else {
+            console.log(
+              `API returned did not return ${this.difficulty} game, fetching again`
+            );
+            setTimeout(fetchBoard, 100);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Sudoku board:", error);
+          fetchBoard();
+        });
+    };
+    runInAction(() => {
+      this.isLoading = true;
+    });
+    fetchBoard();
   }
+
+  //   fetchNewBoard() {
+  //     this.board = [
+  //       [0, 2, 0, 3, 9, 0, 0, 0, 6],
+  //       [8, 0, 0, 0, 4, 5, 0, 0, 0],
+  //       [0, 0, 0, 0, 2, 0, 0, 0, 0],
+  //       [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  //       [0, 0, 3, 0, 0, 0, 7, 8, 0],
+  //       [2, 9, 0, 7, 0, 0, 0, 5, 0],
+  //       [3, 0, 0, 0, 0, 0, 0, 0, 1],
+  //       [9, 0, 5, 0, 0, 1, 6, 0, 0],
+  //       [0, 0, 0, 0, 0, 0, 0, 2, 0]
+  //     ];
+  //     this.solution = [
+  //       [5, 2, 1, 3, 9, 7, 8, 4, 6],
+  //       [8, 6, 7, 1, 4, 5, 2, 3, 9],
+  //       [4, 3, 9, 6, 2, 8, 5, 1, 7],
+  //       [1, 7, 4, 8, 5, 2, 9, 6, 3],
+  //       [6, 5, 3, 4, 1, 9, 7, 8, 2],
+  //       [2, 9, 8, 7, 6, 3, 1, 5, 4],
+  //       [3, 8, 2, 5, 7, 6, 4, 9, 1],
+  //       [9, 4, 5, 2, 3, 1, 6, 7, 8],
+  //       [7, 1, 6, 9, 8, 4, 3, 2, 5]
+  //     ];
+  //     this.isLoading = false;
+  //     this.drawBoard();
+  //   }
 
   drawBoard() {
     if (!this.board || !this.solution) return;
@@ -153,9 +149,7 @@ export class SudokuGameLogic {
   }
 
   checkBoard() {
-    // compare this.board with this.solution
     if (!this.board || !this.solution) return;
-    console.log("checkBoard", toJS(this.board), toJS(this.solution));
     let isCorrect = true;
     for (let i = 0; i < this.board.length; i++) {
       for (let j = 0; j < this.board[i].length; j++) {
@@ -164,9 +158,11 @@ export class SudokuGameLogic {
           this.board[i][j] !== this.solution[i][j]
         ) {
           isCorrect = false;
-          this.cells
-            .find((cell) => cell.row === i && cell.col === j)!
-            .cellElement!.classList.add("incorrect");
+          const cellToMark = this.cells.find(
+            (cell) => cell.row === i && cell.col === j
+          );
+          cellToMark!.cellElement!.classList.remove("locked");
+          cellToMark!.cellElement!.classList.add("incorrect");
         }
       }
     }
@@ -211,10 +207,6 @@ export class SudokuGameLogic {
   }
 
   restartGame(e: Event) {
-    console.log(
-      "restartGame",
-      (e.target! as HTMLButtonElement).dataset.difficulty
-    );
     this.difficulty = (e.target! as HTMLButtonElement).dataset.difficulty as
       | "Easy"
       | "Medium"

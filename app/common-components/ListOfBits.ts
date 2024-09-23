@@ -5,6 +5,7 @@ import tfeMobile from "../../public/2048-mobile.jpg";
 import wordleDesktop from "../../public/wordle-desktop.png";
 import wordleMobile from "../../public/wordle-mobile.png";
 import minesweeper from "../../public/minesweeper.png";
+import sudoku from "../../public/sudoku.png";
 import loremPicsum from "../../public/lorem-picsum.jpg";
 
 export const bitsAndBobs = [
@@ -39,8 +40,8 @@ export const bitsAndBobs = [
   {
     name: "Sudoku",
     href: "/sudoku",
-    desktopImage: loremPicsum,
-    mobileImage: loremPicsum,
+    desktopImage: sudoku,
+    mobileImage: sudoku,
     alt: "Sudoku game"
   }
 ];
