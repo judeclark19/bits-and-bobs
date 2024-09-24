@@ -36,6 +36,7 @@ export class CellClass {
       this.inputElement.addEventListener("input", (e) => {
         const value = (e.target as HTMLInputElement).value;
         this.setValue(value === "" ? 0 : parseInt(value));
+        this.game.setCellActive(this.row, this.col, this.value);
       });
       this.cellElement.appendChild(this.inputElement);
     } else {
@@ -51,8 +52,12 @@ export class CellClass {
   }
 
   handleCellClick() {
-    if (!this.cellElement?.classList.contains("empty")) return;
-    this.game.setCellActive(this.row, this.col);
+    if (!this.cellElement?.classList.contains("empty")) {
+      this.game.highlight(this.value);
+      this.game.removeActiveCell();
+      return;
+    }
+    this.game.setCellActive(this.row, this.col, this.value);
     if (this.game.popover!.isOpen) {
       this.game.popover!.closePopover();
     }
@@ -61,7 +66,7 @@ export class CellClass {
   handleRightClick(e: Event) {
     if (!this.cellElement?.classList.contains("empty")) return;
     e.preventDefault();
-    this.game.setCellActive(this.row, this.col);
+    this.game.setCellActive(this.row, this.col, this.value);
     this.game.popover!.openPopover();
   }
 

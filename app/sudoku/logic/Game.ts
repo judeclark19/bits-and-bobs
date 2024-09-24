@@ -18,6 +18,7 @@ export class SudokuGameLogic {
   activeCell: CellClass | null | undefined = null;
   popoverIsOpen = false;
   isLoading = true;
+  loadingMessage = "Calling dosuku API...";
   constructor() {
     makeAutoObservable(this);
   }
@@ -57,9 +58,11 @@ export class SudokuGameLogic {
     }
   }
 
+  //   FETCH NEW BOARD REAL API CALL
   fetchNewBoard() {
     const fetchBoard = () => {
-      console.log(`Calling dosuku API, looking for ${this.difficulty} game`);
+      this.loadingMessage = `Calling dosuku API, looking for ${this.difficulty.toLowerCase()} game...`;
+      console.log(this.loadingMessage);
       fetch(
         "https://sudoku-api.vercel.app/api/dosuku?query={newboard(limit:20){grids{value,solution,difficulty}}}"
       )
@@ -67,7 +70,6 @@ export class SudokuGameLogic {
           return response.json();
         })
         .then(({ newboard }) => {
-          const fetchedDifficulty = newboard.grids[0].difficulty;
           const matchingDifficulty = newboard.grids.find(
             (grid: any) => grid.difficulty === this.difficulty
           );
@@ -79,9 +81,8 @@ export class SudokuGameLogic {
               this.isLoading = false;
             });
           } else {
-            console.log(
-              `API returned did not return ${this.difficulty} game, fetching again`
-            );
+            this.loadingMessage = `API returned did not return ${this.difficulty} game, fetching again...`;
+            console.log(this.loadingMessage);
             setTimeout(fetchBoard, 100);
           }
         })
@@ -96,37 +97,37 @@ export class SudokuGameLogic {
     fetchBoard();
   }
 
-  //   fetchNewBoard() {
-  //     this.board = [
-  //       [0, 2, 0, 3, 9, 0, 0, 0, 6],
-  //       [8, 0, 0, 0, 4, 5, 0, 0, 0],
-  //       [0, 0, 0, 0, 2, 0, 0, 0, 0],
-  //       [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  //       [0, 0, 3, 0, 0, 0, 7, 8, 0],
-  //       [2, 9, 0, 7, 0, 0, 0, 5, 0],
-  //       [3, 0, 0, 0, 0, 0, 0, 0, 1],
-  //       [9, 0, 5, 0, 0, 1, 6, 0, 0],
-  //       [0, 0, 0, 0, 0, 0, 0, 2, 0]
-  //     ];
-  //     this.solution = [
-  //       [5, 2, 1, 3, 9, 7, 8, 4, 6],
-  //       [8, 6, 7, 1, 4, 5, 2, 3, 9],
-  //       [4, 3, 9, 6, 2, 8, 5, 1, 7],
-  //       [1, 7, 4, 8, 5, 2, 9, 6, 3],
-  //       [6, 5, 3, 4, 1, 9, 7, 8, 2],
-  //       [2, 9, 8, 7, 6, 3, 1, 5, 4],
-  //       [3, 8, 2, 5, 7, 6, 4, 9, 1],
-  //       [9, 4, 5, 2, 3, 1, 6, 7, 8],
-  //       [7, 1, 6, 9, 8, 4, 3, 2, 5]
-  //     ];
-  //     this.isLoading = false;
-  //     this.drawBoard();
-  //   }
+  // FETCH NEW BOARD MOCKED
+  // fetchNewBoard() {
+  //   this.board = [
+  //     [0, 2, 0, 3, 9, 0, 0, 0, 6],
+  //     [8, 0, 0, 0, 4, 5, 0, 0, 0],
+  //     [0, 0, 0, 0, 2, 0, 0, 0, 0],
+  //     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  //     [0, 0, 3, 0, 0, 0, 7, 8, 0],
+  //     [2, 9, 0, 7, 0, 0, 0, 5, 0],
+  //     [3, 0, 0, 0, 0, 0, 0, 0, 1],
+  //     [9, 0, 5, 0, 0, 1, 6, 0, 0],
+  //     [0, 0, 0, 0, 0, 0, 0, 2, 0]
+  //   ];
+  //   this.solution = [
+  //     [5, 2, 1, 3, 9, 7, 8, 4, 6],
+  //     [8, 6, 7, 1, 4, 5, 2, 3, 9],
+  //     [4, 3, 9, 6, 2, 8, 5, 1, 7],
+  //     [1, 7, 4, 8, 5, 2, 9, 6, 3],
+  //     [6, 5, 3, 4, 1, 9, 7, 8, 2],
+  //     [2, 9, 8, 7, 6, 3, 1, 5, 4],
+  //     [3, 8, 2, 5, 7, 6, 4, 9, 1],
+  //     [9, 4, 5, 2, 3, 1, 6, 7, 8],
+  //     [7, 1, 6, 9, 8, 4, 3, 2, 5]
+  //   ];
+  //   this.isLoading = false;
+  //   this.drawBoard();
+  // }
 
   drawBoard() {
     if (!this.board || !this.solution) return;
-    // this.gridElement!.innerHTML = "";
-
+    this.gridElement!.style.pointerEvents = "auto";
     for (let i = 0; i < this.board!.length; i++) {
       for (let j = 0; j < this.board![i].length; j++) {
         this.cells.push(new CellClass(this, i, j, this.board![i][j]));
@@ -134,16 +135,36 @@ export class SudokuGameLogic {
     }
   }
 
-  setCellActive(row: number, col: number) {
+  setCellActive(row: number, col: number, value: number) {
     this.cells.forEach((cell) => {
       if (cell.row === row && cell.col === col) {
         cell.isActive = true;
         cell.cellElement!.classList.add("active");
         cell.cellElement!.classList.remove("incorrect");
         this.activeCell = cell;
+
+        this.highlight(value);
       } else {
         cell.isActive = false;
         cell.cellElement!.classList.remove("active");
+      }
+    });
+  }
+
+  removeActiveCell() {
+    this.cells.forEach((cell) => {
+      cell.isActive = false;
+      cell.cellElement!.classList.remove("active");
+    });
+    this.activeCell = null;
+  }
+
+  highlight(value: number) {
+    this.cells.forEach((cell) => {
+      if (cell.value === value && value !== 0) {
+        cell.cellElement!.classList.add("highlighted");
+      } else {
+        cell.cellElement!.classList.remove("highlighted");
       }
     });
   }
@@ -169,7 +190,9 @@ export class SudokuGameLogic {
 
     setTimeout(() => {
       if (isCorrect && this.cells.every((cell) => cell.value !== 0)) {
+        this.highlight(0);
         alert("🎉 Congratulations! You solved the puzzle!");
+        this.gridElement!.style.pointerEvents = "none";
       } else if (this.cells.some((cell) => cell.value !== 0) && isCorrect) {
         alert("👍 You're on the right track! Keep it up!");
       } else {
@@ -201,7 +224,12 @@ export class SudokuGameLogic {
       });
     });
 
-    if (this.cells.every((cell) => cell.value !== 0)) {
+    if (
+      this.cells.every((cell) => cell.value !== 0) &&
+      !this.cells.some((cell) =>
+        cell.cellElement!.classList.contains("incorrect")
+      )
+    ) {
       this.checkBoard();
     }
   }

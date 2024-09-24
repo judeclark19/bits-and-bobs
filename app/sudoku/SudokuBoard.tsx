@@ -59,22 +59,13 @@ const SudokuBoard = observer(() => {
           <div ref={gameContainerRef}>
             <SudokuGridStyle id="sudoku-grid">
               {sudokuGameState.isLoading && (
-                <Loader altText="Fetching new game..." />
+                <Loader altText={sudokuGameState.loadingMessage} />
               )}
-              {/* populated by logic */}
+              {/* grid cells populated by logic */}
               <div id="number-select">
-                <div></div>
-                <div></div>
+                <div>{/* intentionally left blank */}</div>
+                <div>{/* intentionally left blank */}</div>
                 <button id="close">x</button>
-                {/* <button data-value="1">1</button>
-                <button data-value="2">2</button>
-                <button data-value="3">3</button>
-                <button data-value="4">4</button>
-                <button data-value="5">5</button>
-                <button data-value="6">6</button>
-                <button data-value="7">7</button>
-                <button data-value="8">8</button>
-                <button data-value="9">9</button> */}
                 {Array.from({ length: 9 }, (_, i) => (
                   <button key={i} data-value={i + 1}>
                     {i + 1}
@@ -86,44 +77,27 @@ const SudokuBoard = observer(() => {
               </div>
             </SudokuGridStyle>
             <ControlButtons>
-              <button id="check-board">Check Board</button>
+              <button id="check-board">Check solution</button>
               <p>
                 <strong>Start a new game</strong>:
               </p>
               <div className="new-game-buttons">
-                <button
-                  onClick={() => {
-                    localStorage.setItem("sudokuDifficulty", "Easy");
-                  }}
-                  className={`new-game ${
-                    sudokuGameState.difficulty === "Easy" ? "selected" : ""
-                  }`}
-                  data-difficulty="Easy"
-                >
-                  Easy
-                </button>
-                <button
-                  onClick={() => {
-                    localStorage.setItem("sudokuDifficulty", "Medium");
-                  }}
-                  className={`new-game ${
-                    sudokuGameState.difficulty === "Medium" ? "selected" : ""
-                  }`}
-                  data-difficulty="Medium"
-                >
-                  Medium
-                </button>
-                <button
-                  onClick={() => {
-                    localStorage.setItem("sudokuDifficulty", "Hard");
-                  }}
-                  className={`new-game ${
-                    sudokuGameState.difficulty === "Hard" ? "selected" : ""
-                  }`}
-                  data-difficulty="Hard"
-                >
-                  Hard
-                </button>
+                {["Easy", "Medium", "Hard"].map((difficulty) => (
+                  <button
+                    key={difficulty}
+                    onClick={() => {
+                      localStorage.setItem("sudokuDifficulty", difficulty);
+                    }}
+                    className={`new-game ${
+                      sudokuGameState.difficulty === difficulty
+                        ? "selected"
+                        : ""
+                    }`}
+                    data-difficulty={difficulty}
+                  >
+                    {difficulty}
+                  </button>
+                ))}
               </div>
             </ControlButtons>
           </div>

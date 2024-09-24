@@ -73,6 +73,12 @@ export const SudokuGridStyle = styled.div`
     &.locked {
       background-color: var(--violet);
     }
+
+    &.highlighted {
+      box-shadow: 0 0 12px rgba(255, 255, 255, 1);
+      border: 2px solid white !important;
+      border-radius: 4px;
+    }
   }
 
   #number-select {
