@@ -12,7 +12,7 @@ export const SudokuGridStyle = styled.div`
   gap: 0;
 
   .cell {
-    background-color: var(--violet);
+    background-color: var(--periwinkle);
     display: grid;
     place-items: center;
     font-size: calc(1rem + 2vw);
@@ -35,16 +35,14 @@ export const SudokuGridStyle = styled.div`
     }
 
     &.empty {
-      background-color: var(--periwinkle);
-      font-weight: 400;
-
       input {
-        /* border: 2px solid red; */
         border: none;
         width: 100%;
         height: 100%;
         background-color: transparent;
         color: white;
+        -webkit-text-stroke: 1px var(--navy);
+        font-weight: 500;
         font-size: calc(1rem + 2vw);
         text-align: center;
 
@@ -57,6 +55,7 @@ export const SudokuGridStyle = styled.div`
 
         /* For Firefox */
         -moz-appearance: textfield;
+        appearance: textfield;
 
         @media (max-width: 600px) {
           font-size: calc(1rem + 0.8vw);
