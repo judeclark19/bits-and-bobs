@@ -16,6 +16,7 @@ export const SudokuGridStyle = styled.div`
     display: grid;
     place-items: center;
     font-size: calc(1rem + 2vw);
+    font-weight: 700;
     border: 1px solid var(--navy);
 
     &:nth-child(9n + 4),
@@ -35,6 +36,7 @@ export const SudokuGridStyle = styled.div`
 
     &.empty {
       background-color: var(--periwinkle);
+      font-weight: 400;
 
       input {
         /* border: 2px solid red; */

@@ -34,7 +34,16 @@ export class CellClass {
       this.inputElement.max = "9";
       this.inputElement.value = "";
       this.inputElement.addEventListener("input", (e) => {
-        const value = (e.target as HTMLInputElement).value;
+        let value = (e.target as HTMLInputElement).value;
+
+        // Validation: input must be single digit
+        if (value.length > 1) {
+          value = value.slice(0, 1);
+        } else if (/\D/.test(value)) {
+          value = value.replace(/\D/g, "");
+        }
+
+        this.inputElement!.value = value === "0" ? "" : value;
         this.setValue(value === "" ? 0 : parseInt(value));
         this.game.setCellActive(this.row, this.col, this.value);
       });
@@ -57,6 +66,7 @@ export class CellClass {
       this.game.removeActiveCell();
       return;
     }
+
     this.game.setCellActive(this.row, this.col, this.value);
     if (this.game.popover!.isOpen) {
       this.game.popover!.closePopover();

@@ -143,7 +143,15 @@ export class SudokuGameLogic {
         cell.cellElement!.classList.remove("incorrect");
         this.activeCell = cell;
 
+        // if incorrect, set value to 0
+        if (cell.cellElement!.classList.contains("incorrect")) {
+          cell.value = 0;
+          cell.inputElement!.value = "";
+        } else {
         this.highlight(value);
+        }
+
+        cell.cellElement!.classList.remove("incorrect");
       } else {
         cell.isActive = false;
         cell.cellElement!.classList.remove("active");
