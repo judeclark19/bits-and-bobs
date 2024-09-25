@@ -18,6 +18,7 @@ export class SudokuGameLogic {
   activeCell: CellClass | null | undefined = null;
   popoverIsOpen = false;
   isLoading = true;
+  isFetching = false;
   loadingMessage = "Calling dosuku API...";
   constructor() {
     makeAutoObservable(this);
@@ -60,19 +61,37 @@ export class SudokuGameLogic {
 
   //   FETCH NEW BOARD REAL API CALL
   fetchNewBoard() {
+    // If a fetch is already in progress, do not start another
+    if (this.isFetching) {
+      return;
+    }
+    this.isFetching = true; // Indicate that fetching has started
+
     const fetchBoard = () => {
-      this.loadingMessage = `Calling dosuku API, looking for ${this.difficulty.toLowerCase()} game...`;
+      // If a fetch is already in progress, do not start another
+      if (!this.isFetching) {
+        return;
+      }
+
+      runInAction(() => {
+        this.loadingMessage = `Calling dosuku API, looking for ${this.difficulty.toLowerCase()} game...`;
+      });
       console.log(this.loadingMessage);
+
       fetch(
         "https://sudoku-api.vercel.app/api/dosuku?query={newboard(limit:20){grids{value,solution,difficulty}}}"
       )
-        .then((response) => {
-          return response.json();
-        })
+        .then((response) => response.json())
         .then(({ newboard }) => {
+          // Check if fetching has been canceled after receiving response
+          if (!this.isFetching) {
+            return;
+          }
+
           const matchingDifficulty = newboard.grids.find(
             (grid: any) => grid.difficulty === this.difficulty
           );
+
           if (matchingDifficulty) {
             this.board = matchingDifficulty.value;
             this.solution = matchingDifficulty.solution;
@@ -80,20 +99,36 @@ export class SudokuGameLogic {
             runInAction(() => {
               this.isLoading = false;
             });
+            this.isFetching = false; // Fetching is completeh
+            console.log("set board", matchingDifficulty);
           } else {
-            this.loadingMessage = `API returned did not return ${this.difficulty} game, fetching again...`;
+            runInAction(() => {
+              this.loadingMessage = `API did not return ${this.difficulty} game, fetching again...`;
+            });
             console.log(this.loadingMessage);
-            setTimeout(fetchBoard, 100);
+            // Retry fetching if fetching hasn't been canceled
+            if (this.isFetching) {
+              setTimeout(fetchBoard, 100);
+            }
           }
         })
         .catch((error) => {
           console.error("Error fetching Sudoku board:", error);
-          fetchBoard();
+          // Retry fetching if fetching hasn't been canceled
+          if (this.isFetching) {
+            setTimeout(fetchBoard, 100);
+          } else {
+            runInAction(() => {
+              this.isLoading = false;
+            });
+          }
         });
     };
+
     runInAction(() => {
       this.isLoading = true;
     });
+
     fetchBoard();
   }
 
@@ -148,7 +183,7 @@ export class SudokuGameLogic {
           cell.value = 0;
           cell.inputElement!.value = "";
         } else {
-        this.highlight(value);
+          this.highlight(value);
         }
 
         cell.cellElement!.classList.remove("incorrect");
@@ -251,6 +286,9 @@ export class SudokuGameLogic {
       cell.cellElement!.remove();
     });
     this.cells = [];
+    runInAction(() => {
+      this.loadingMessage = `Calling dosuku API, looking for ${this.difficulty.toLowerCase()} game...`;
+    });
     this.fetchNewBoard();
   }
 }
