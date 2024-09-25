@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useRef } from "react";
-import sudokuGameState from "./logic/Game";
+import sudokuGameState, { Difficulty } from "./logic/Game";
 import { observer } from "mobx-react-lite";
 import Loader from "../common-components/Loader";
 import { ControlButtons, SudokuGridStyle } from "./SudokuBoard.styles";
+import puzzleGenerator from "./logic/PuzzleGenerator";
 
 const SudokuBoard = observer(() => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -19,9 +20,11 @@ const SudokuBoard = observer(() => {
     if (!sudokuGameState.isInitialized && gameContainerRef.current) {
       sudokuGameState.initializeGame(
         gameContainerRef.current,
-        localStorage.getItem("sudokuDifficulty") as "Easy" | "Medium" | "Hard"
+        localStorage.getItem("sudokuDifficulty") as Difficulty
       );
     }
+
+    puzzleGenerator;
   }, []);
 
   return (
@@ -30,7 +33,7 @@ const SudokuBoard = observer(() => {
         <Loader />
       ) : (
         <>
-          <p
+          {/* <p
             style={{
               padding: "20px",
               lineHeight: "1.5"
@@ -55,7 +58,7 @@ const SudokuBoard = observer(() => {
           >
             If you do not see a loading spinner or a game below, please refresh
             the page!
-          </p>
+          </p> */}
           <div ref={gameContainerRef}>
             <SudokuGridStyle id="sudoku-grid">
               {sudokuGameState.isLoading && (
