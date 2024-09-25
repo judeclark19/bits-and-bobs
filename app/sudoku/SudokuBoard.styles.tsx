@@ -41,7 +41,6 @@ export const SudokuGridStyle = styled.div`
         height: 100%;
         background-color: transparent;
         color: white;
-        -webkit-text-stroke: 1px var(--navy);
         font-weight: 500;
         font-size: calc(1rem + 2vw);
         text-align: center;
