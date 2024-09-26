@@ -30,7 +30,6 @@ const SpinDeciderControls = styled.div`
 `;
 
 const SpinDeciderStyle = styled.div`
-  max-height: 500px;
   margin-top: 2rem;
   position: relative;
 
@@ -44,6 +43,12 @@ const SpinDeciderStyle = styled.div`
     top: 0px;
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  .wheel-container {
+    max-height: 600px;
+    aspect-ratio: 1/1;
+    margin: auto;
   }
 `;
 
@@ -64,14 +69,6 @@ const SpinDecider = observer(() => {
     }
   }, []);
 
-  const handleItemCountChange = () => {
-    spinDeciderState.updateItemCount(itemCount);
-  };
-
-  const handleSpin = () => {
-    spinDeciderState.spinWheel();
-  };
-
   return (
     <div
       style={{
@@ -79,7 +76,6 @@ const SpinDecider = observer(() => {
         paddingRight: "20px"
       }}
     >
-      {" "}
       <SpinDeciderControls>
         <p>
           Required: Enter number of things:{" "}
@@ -108,13 +104,17 @@ const SpinDecider = observer(() => {
           ))}
         </div>
         <div className="buttons">
-          <button onClick={handleItemCountChange}>Update Wheel</button>
-          <button onClick={handleSpin}>Spin the Wheel</button>
+          <button onClick={() => spinDeciderState.updateItemCount(itemCount)}>
+            Update Wheel
+          </button>
+          <button onClick={() => spinDeciderState.spinWheel()}>
+            Spin Wheel
+          </button>
         </div>
       </SpinDeciderControls>
       <SpinDeciderStyle>
         <div id="marker"></div>
-        <div ref={wheelContainerRef}></div>
+        <div className="wheel-container" ref={wheelContainerRef}></div>
       </SpinDeciderStyle>
     </div>
   );

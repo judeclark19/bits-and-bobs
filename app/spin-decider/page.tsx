@@ -18,7 +18,10 @@ export default function SudokuPage() {
       >
         <h1>Spin Decider</h1>
 
-        <h2>Need help deciding between 2+ things? Give the wheel a spin!</h2>
+        <h2>
+          Need help deciding between 2+ things? Give the wheel a spin! You can
+          click and drag on the wheel itself or click the "Spin Wheel" button.
+        </h2>
       </div>
       <SpinDecider />
     </>
