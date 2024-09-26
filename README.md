@@ -9,3 +9,4 @@ Just a couple games for fun!
 - Wordle
 - Minesweeper
 - Sudoku
+- Spin Decider
