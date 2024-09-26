@@ -41,7 +41,7 @@ export default function RootLayout({
                 </strong>
               </div>
             </div>
-            <div className="bottom">Last updated September 24, 2024</div>
+            <div className="bottom">Last updated September 26, 2024</div>
           </footer>
         </StyledComponentsRegistry>
       </body>
