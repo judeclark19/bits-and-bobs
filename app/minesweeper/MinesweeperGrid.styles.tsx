@@ -76,7 +76,6 @@ export const GridStyle = styled.div`
 `;
 
 export const ResetButton = styled.button`
-  background-color: transparent;
   border: 2px outset black;
   background-color: #333;
   width: fit-content;

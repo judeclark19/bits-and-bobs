@@ -4,7 +4,6 @@ import sudokuGameState, { Difficulty } from "./logic/Game";
 import { observer } from "mobx-react-lite";
 import Loader from "../common-components/Loader";
 import { ControlButtons, SudokuGridStyle } from "./SudokuBoard.styles";
-import puzzleGenerator from "./logic/PuzzleGenerator";
 
 const SudokuBoard = observer(() => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -23,8 +22,6 @@ const SudokuBoard = observer(() => {
         localStorage.getItem("sudokuDifficulty") as Difficulty
       );
     }
-
-    puzzleGenerator;
   }, []);
 
   return (

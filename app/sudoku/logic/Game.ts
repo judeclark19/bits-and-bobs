@@ -198,21 +198,24 @@ export class SudokuGameLogic {
       if (cell.row === row && cell.col === col) {
         cell.isActive = true;
         cell.cellElement!.classList.add("active");
-        cell.cellElement!.classList.remove("incorrect");
         this.activeCell = cell;
 
-        // if incorrect, set value to 0
-        if (cell.cellElement!.classList.contains("incorrect")) {
-          cell.value = 0;
-          cell.inputElement!.value = "";
-        } else {
-          this.highlight(value);
+        if (cell.cellElement?.classList.contains("incorrect")) {
+          this.clearIncorrectCells();
         }
-
-        cell.cellElement!.classList.remove("incorrect");
       } else {
         cell.isActive = false;
         cell.cellElement!.classList.remove("active");
+      }
+    });
+  }
+
+  clearIncorrectCells() {
+    this.cells.forEach((cell) => {
+      if (cell.cellElement!.classList.contains("incorrect")) {
+        cell.cellElement!.classList.remove("incorrect");
+        cell.setValue(0);
+        cell.inputElement!.value = "";
       }
     });
   }
