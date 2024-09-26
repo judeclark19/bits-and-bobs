@@ -43,5 +43,12 @@ export const bitsAndBobs = [
     desktopImage: sudoku,
     mobileImage: sudoku,
     alt: "Sudoku game"
+  },
+  {
+    name: "Spin Decider",
+    href: "/spin-decider",
+    desktopImage: loremPicsum,
+    mobileImage: loremPicsum,
+    alt: "Spin Decider"
   }
 ];
