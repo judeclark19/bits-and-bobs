@@ -8,4 +8,4 @@ Just a couple games for fun!
 - 2048
 - Wordle
 - Minesweeper
-- Sudoku (Uses the [dosuku](https://sudoku-api.vercel.app/) API by [Raghav Gupta](https://github.com/Marcus0086))
+- Sudoku
