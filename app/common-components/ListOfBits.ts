@@ -6,6 +6,7 @@ import wordleDesktop from "../../public/wordle-desktop.png";
 import wordleMobile from "../../public/wordle-mobile.png";
 import minesweeper from "../../public/minesweeper.png";
 import sudoku from "../../public/sudoku.png";
+import spinDecider from "../../public/spin-decider.png";
 import loremPicsum from "../../public/lorem-picsum.jpg";
 
 export const bitsAndBobs = [
@@ -47,8 +48,8 @@ export const bitsAndBobs = [
   {
     name: "Spin Decider",
     href: "/spin-decider",
-    desktopImage: loremPicsum,
-    mobileImage: loremPicsum,
+    desktopImage: spinDecider,
+    mobileImage: spinDecider,
     alt: "Spin Decider"
   }
 ];

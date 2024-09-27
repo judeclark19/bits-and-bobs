@@ -31,10 +31,12 @@ const TOCCardStyle = styled.div`
 
 function TOCCard({
   name,
+  href,
   desktopImage,
   mobileImage
 }: {
   name: string;
+  href: string;
   desktopImage: string;
   mobileImage: string;
 }) {
@@ -65,7 +67,11 @@ function TOCCard({
   }, [desktopImage, mobileImage]);
 
   return (
-    <TOCCardStyle>
+    <TOCCardStyle
+      onClick={() => {
+        window.location.assign(href);
+      }}
+    >
       {name} →
       <Image
         priority

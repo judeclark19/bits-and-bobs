@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import TOCCard from "./TOCCard";
 import { styled } from "styled-components";
 import { bitsAndBobs } from "./ListOfBits";
@@ -19,13 +18,13 @@ function TableOfContents() {
   return (
     <FlexGrid>
       {bitsAndBobs.map((b, i) => (
-        <Link key={i} href={b.href}>
-          <TOCCard
-            name={b.name}
-            desktopImage={b.desktopImage.src}
-            mobileImage={b.mobileImage.src}
-          />
-        </Link>
+        <TOCCard
+          key={i}
+          name={b.name}
+          href={b.href}
+          desktopImage={b.desktopImage.src}
+          mobileImage={b.mobileImage.src}
+        />
       ))}
     </FlexGrid>
   );

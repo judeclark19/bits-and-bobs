@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import spinDeciderState from "./SpinDecider.logic";
 import { styled } from "styled-components";
+import Loader from "../common-components/Loader";
 
 const SpinDeciderControls = styled.div`
   .inputs {
@@ -93,14 +94,7 @@ const SpinDecider = observer(() => {
 
         <div className="inputs" ref={inputsRef}>
           {Array.from({ length: itemCount }).map((_, i) => (
-            <input
-              key={i}
-              type="text"
-              placeholder={`Thing ${i + 1}`}
-              onChange={(e) => {
-                spinDeciderState.props.items[i].label = e.target.value;
-              }}
-            />
+            <input key={i} type="text" placeholder={`Thing ${i + 1}`} />
           ))}
         </div>
         <div className="buttons">
@@ -113,6 +107,7 @@ const SpinDecider = observer(() => {
         </div>
       </SpinDeciderControls>
       <SpinDeciderStyle>
+        {!spinDeciderState || (!spinDeciderState.isInitialized && <Loader />)}
         <div id="marker"></div>
         <div className="wheel-container" ref={wheelContainerRef}></div>
       </SpinDeciderStyle>

@@ -20,7 +20,8 @@ export default function SudokuPage() {
 
         <h2>
           Need help deciding between 2+ things? Give the wheel a spin! You can
-          click and drag on the wheel itself or click the "Spin Wheel" button.
+          click and drag on the wheel itself or click the &ldquo;Spin
+          Wheel&rdquo; button.
         </h2>
       </div>
       <SpinDecider />

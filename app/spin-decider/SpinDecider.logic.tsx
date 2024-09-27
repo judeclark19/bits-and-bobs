@@ -1,4 +1,5 @@
 import { makeAutoObservable, toJS } from "mobx";
+// @ts-ignore
 import { Wheel } from "spin-wheel";
 
 type WheelItem = {

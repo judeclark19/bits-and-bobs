@@ -1,4 +1,3 @@
-import { toJS } from "mobx";
 import { SudokuGameLogic } from "./Game";
 
 export class CellClass {
@@ -68,6 +67,7 @@ export class CellClass {
     }
 
     this.game.setCellActive(this.row, this.col, this.value);
+    this.game.highlight(this.value);
     if (this.game.popover!.isOpen) {
       this.game.popover!.closePopover();
     }
@@ -84,5 +84,6 @@ export class CellClass {
     this.value = value;
     this.game.board![this.row][this.col] = value;
     this.game.checkForLockedNumbers();
+    this.game.highlight(value);
   }
 }
