@@ -246,7 +246,6 @@ class WordleGameLogic {
         continue;
       } else {
         key?.style.setProperty("background-color", "var(--violet)");
-        key?.setAttribute("disabled", "true");
         this.disabledLetters.push(this.currentGuess[i]);
         this.cells[this.turns][i].setBackgroundColor("var(--violet)");
       }
@@ -288,7 +287,6 @@ class WordleGameLogic {
     this.keyboard!.querySelectorAll("button").forEach((button) => {
       if (button.textContent !== "Enter" && button.textContent !== "Delete") {
         button.style.setProperty("background-color", "var(--periwinkle)");
-        button.removeAttribute("disabled");
       }
     });
 
