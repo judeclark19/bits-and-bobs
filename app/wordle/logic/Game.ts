@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, toJS } from "mobx";
 import { wordBank } from "./WordBank";
 import Cell from "./Cell";
 import { wordleGreen, wordleRed, wordleYellow } from "../GameContainer.styles";
@@ -11,6 +11,7 @@ const keys = [
 
 class WordleGameLogic {
   isInitialized: boolean = false;
+  gameWrapper: HTMLDivElement | null = null;
   guessingGrid: HTMLDivElement | null = null;
   keyboard: HTMLDivElement | null = null;
   keyboardDisabled: boolean = false;
@@ -36,11 +37,13 @@ class WordleGameLogic {
     this.isInitialized = initialized;
   }
 
-  setGuessingGrid(guessingGrid: HTMLDivElement) {
+  setDocumentRefs(
+    gameWrapper: HTMLDivElement,
+    guessingGrid: HTMLDivElement,
+    keyboard: HTMLDivElement
+  ) {
+    this.gameWrapper = gameWrapper;
     this.guessingGrid = guessingGrid;
-  }
-
-  setKeyboard(keyboard: HTMLDivElement) {
     this.keyboard = keyboard;
   }
 
@@ -115,7 +118,10 @@ class WordleGameLogic {
   }
 
   handleSelection(selection: string) {
-    console.log("selection", selection);
+    if (this.keyboardDisabled) {
+      return;
+    }
+
     if (selection === "Enter") {
       if (this.modalOpen) {
         this.setModalOpen(false);
@@ -254,6 +260,30 @@ class WordleGameLogic {
 
   setModalOpen(open: boolean) {
     this.modalOpen = open;
+
+    const focusableElements = this.gameWrapper!.querySelectorAll("button");
+    if (open) {
+      // disable focusability of all elements behind the modal
+      focusableElements.forEach((element) => {
+        element.setAttribute("tabindex", "-1");
+      });
+    } else if (this.keyboardDisabled) {
+      const filteredElements = Array.from(focusableElements).filter(
+        (element) => {
+          return !this.keyboard!.contains(element);
+        }
+      );
+
+      // restore focusability of elements not in the keyboard
+      filteredElements.forEach((element) => {
+        element.setAttribute("tabindex", "0");
+      });
+    } else {
+      // restore focusability of all elements
+      focusableElements.forEach((element) => {
+        element.setAttribute("tabindex", "0");
+      });
+    }
   }
 
   setKeyboardDisabled(disabled: boolean) {
@@ -275,6 +305,7 @@ class WordleGameLogic {
   }
 
   restartGame() {
+    document.getElementById("enter")?.focus();
     this.disabledLetters = [];
 
     this.cells.forEach((cellRow) => {
@@ -294,6 +325,12 @@ class WordleGameLogic {
     this.turns = 0;
     this.setRandomTargetWord();
     this.setKeyboardDisabled(false);
+
+    /// turn focus on
+    const focusableElements = this.gameWrapper!.querySelectorAll("button");
+    focusableElements.forEach((element) => {
+      element.setAttribute("tabindex", "0");
+    });
   }
 }
 

@@ -77,7 +77,7 @@ export const Keyboard = styled.div<{
   flex-direction: column;
   gap: 5px;
   width: max-content;
-  pointer-events: ${(props) => (props.$disabled ? "none" : "auto")};
+  background-color: transparent;
 
   .row {
     display: flex;
@@ -86,7 +86,6 @@ export const Keyboard = styled.div<{
 
     .key {
       background-color: var(--periwinkle);
-      /* flex: 1; */
       height: 48px;
       width: 40px;
       display: flex;
@@ -97,6 +96,7 @@ export const Keyboard = styled.div<{
       padding: 8px;
       box-sizing: border-box;
       border-radius: 4px;
+      cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
 
       @media screen and (max-width: 768px) {
         width: 28px;
@@ -116,9 +116,15 @@ export const Keyboard = styled.div<{
         }
       }
 
-      &:disabled {
-        pointer-events: none;
-      }
+      ${(props) =>
+        props.$disabled &&
+        `
+           filter: brightness(0.5);
+
+          &:hover {
+            filter: brightness(0.5);
+          }
+    `}
     }
   }
 `;

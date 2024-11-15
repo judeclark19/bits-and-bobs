@@ -12,9 +12,10 @@ import {
   Wrapper
 } from "./GameContainer.styles";
 import Loader from "../common-components/Loader";
-import { FaInfoCircle } from "react-icons/fa";
 
 const GameContainer = observer(() => {
+  const gameWrapper = useRef<HTMLDivElement>(null);
+  const newGameButtonRef = useRef<HTMLButtonElement>(null);
   const guessingGrid = useRef<HTMLDivElement>(null);
   const keyboard = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -35,20 +36,25 @@ const GameContainer = observer(() => {
   };
 
   useEffect(() => {
+    const documentReady =
+      gameWrapper.current && guessingGrid.current && keyboard.current;
+
     // Initialize the game state on the client side
-    if (
-      !wordleGameState.isInitialized &&
-      guessingGrid.current &&
-      keyboard.current
-    ) {
-      wordleGameState.setGuessingGrid(guessingGrid.current);
-      wordleGameState.setKeyboard(keyboard.current);
+    if (!wordleGameState.isInitialized && documentReady) {
+      wordleGameState.setDocumentRefs(
+        gameWrapper.current,
+        guessingGrid.current,
+        keyboard.current
+      );
       wordleGameState.initializeGame();
       window.addEventListener("keydown", keyboardListeners);
       wordleGameState.setInitialized(true);
-    } else if (guessingGrid.current && keyboard.current) {
-      wordleGameState.setGuessingGrid(guessingGrid.current);
-      wordleGameState.setKeyboard(keyboard.current);
+    } else if (documentReady) {
+      wordleGameState.setDocumentRefs(
+        gameWrapper.current,
+        guessingGrid.current,
+        keyboard.current
+      );
       wordleGameState.buildGrid();
     }
 
@@ -64,10 +70,17 @@ const GameContainer = observer(() => {
 
   useEffect(() => {
     setModalOpen(wordleGameState.modalOpen);
+
+    // when modal opens, focus on the new game button
+    if (wordleGameState.modalOpen) {
+      setTimeout(() => {
+        newGameButtonRef.current?.focus();
+      }, 0);
+    }
   }, [wordleGameState.modalOpen]);
 
   return (
-    <Wrapper>
+    <Wrapper ref={gameWrapper}>
       <div
         style={{
           display: wordleGameState.isInitialized ? "none" : "block"
@@ -87,6 +100,7 @@ const GameContainer = observer(() => {
               Close
             </button>
             <button
+              ref={newGameButtonRef}
               onClick={async () => {
                 wordleGameState.restartGame();
                 wordleGameState.setModalOpen(false);
