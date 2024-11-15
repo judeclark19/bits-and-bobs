@@ -2,56 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import spinDeciderState from "./SpinDecider.logic";
-import { styled } from "styled-components";
 import Loader from "../common-components/Loader";
-
-const SpinDeciderControls = styled.div`
-  .inputs {
-    margin-bottom: 1rem;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-
-    input {
-      font-size: 16px;
-    }
-  }
-
-  .buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-
-    button {
-      border: 2px outset black;
-      background-color: #333;
-      width: fit-content;
-    }
-  }
-`;
-
-const SpinDeciderStyle = styled.div`
-  margin-top: 2rem;
-  position: relative;
-
-  #marker {
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 30px solid white;
-    position: absolute;
-    top: 0px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .wheel-container {
-    max-height: 600px;
-    aspect-ratio: 1/1;
-    margin: auto;
-  }
-`;
+import { SpinDeciderControls, SpinDeciderStyle } from "./SpinDecider.styles";
 
 const SpinDecider = observer(() => {
   const wheelContainerRef = useRef<HTMLDivElement>(null);
@@ -59,6 +11,7 @@ const SpinDecider = observer(() => {
   const [itemCount, setItemCount] = useState(
     spinDeciderState.props.items.length
   );
+  const [canUpdate, setCanUpdate] = useState(false);
 
   useEffect(() => {
     if (
@@ -84,7 +37,10 @@ const SpinDecider = observer(() => {
             style={{ fontSize: "16px" }}
             type="number"
             value={itemCount}
-            onChange={(e) => setItemCount(parseInt(e.target.value))}
+            onChange={(e) => {
+              setCanUpdate(true);
+              setItemCount(parseInt(e.target.value));
+            }}
             min="2"
             max="100"
           />
@@ -94,11 +50,24 @@ const SpinDecider = observer(() => {
 
         <div className="inputs" ref={inputsRef}>
           {Array.from({ length: itemCount }).map((_, i) => (
-            <input key={i} type="text" placeholder={`Thing ${i + 1}`} />
+            <input
+              key={i}
+              type="text"
+              placeholder={`Thing ${i + 1}`}
+              onChange={(e) => {
+                setCanUpdate(true);
+              }}
+            />
           ))}
         </div>
         <div className="buttons">
-          <button onClick={() => spinDeciderState.updateItemCount(itemCount)}>
+          <button
+            disabled={!canUpdate}
+            onClick={() => {
+              setCanUpdate(false);
+              spinDeciderState.updateItemCount(itemCount);
+            }}
+          >
             Update Wheel
           </button>
           <button onClick={() => spinDeciderState.spinWheel()}>

@@ -115,6 +115,7 @@ class WordleGameLogic {
   }
 
   handleSelection(selection: string) {
+    console.log("selection", selection);
     if (selection === "Enter") {
       if (this.modalOpen) {
         this.setModalOpen(false);
@@ -145,10 +146,7 @@ class WordleGameLogic {
         this.currentGuess.pop();
       }
     } else {
-      if (
-        this.currentGuess.length >= 5 ||
-        this.disabledLetters.includes(selection)
-      ) {
+      if (this.currentGuess.length >= 5) {
         return;
       }
       // Find first empty cell
