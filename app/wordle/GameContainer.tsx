@@ -21,10 +21,6 @@ const GameContainer = observer(() => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const keyboardListeners = (e: KeyboardEvent) => {
-    if (wordleGameState.keyboardDisabled && e.key === "Enter") {
-      wordleGameState.handleSelection("Enter");
-      return;
-    }
     if (wordleGameState.keyboardDisabled) return;
     if (e.key === "Enter") {
       wordleGameState.handleSelection("Enter");
