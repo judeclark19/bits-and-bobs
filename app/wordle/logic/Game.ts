@@ -305,7 +305,7 @@ class WordleGameLogic {
   }
 
   restartGame() {
-    document.getElementById("enter")?.focus();
+    (document.activeElement as HTMLElement)?.blur();
     this.disabledLetters = [];
 
     this.cells.forEach((cellRow) => {
