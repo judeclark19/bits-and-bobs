@@ -62,5 +62,5 @@ export const Hand = styled.div<{
   left: 50%;
   translate: 0% -50%;
   rotate: ${({ angle }) => angle}deg;
-  transition: rotate 250ms;
+  transition: rotate 800ms;
 `;
