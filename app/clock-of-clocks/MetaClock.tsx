@@ -1,28 +1,30 @@
 "use client";
 
 import { observer } from "mobx-react-lite";
-import metaClockLogic from "./logic";
+import metaClockLogic, { digits } from "./logic";
 import Digit from "./Digit";
+import { DigitPair, MetaClockContainer } from "./MetaClock.styles";
 
 const MetaClock = observer(() => {
-  console.log(
-    "rendering metaclock",
-    metaClockLogic.hours,
-    metaClockLogic.minutes,
-    metaClockLogic.seconds
-  );
   return (
-    <div>
-      {metaClockLogic.hours.split("").map((digit, index) => (
-        <Digit key={`hour-${index}`} value={digit} />
-      ))}
-      {metaClockLogic.minutes.split("").map((digit, index) => (
-        <Digit key={`minute-${index}`} value={digit} />
-      ))}
-      {metaClockLogic.seconds.split("").map((digit, index) => (
-        <Digit key={`second-${index}`} value={digit} />
-      ))}
-    </div>
+    <MetaClockContainer>
+      <DigitPair>
+        {metaClockLogic.hours.split("").map((digit, index) => (
+          <Digit key={`hour-${index}`} value={digit as keyof typeof digits} />
+        ))}
+      </DigitPair>
+
+      <DigitPair>
+        {metaClockLogic.minutes.split("").map((digit, index) => (
+          <Digit key={`minute-${index}`} value={digit as keyof typeof digits} />
+        ))}
+      </DigitPair>
+      <DigitPair>
+        {metaClockLogic.seconds.split("").map((digit, index) => (
+          <Digit key={`second-${index}`} value={digit as keyof typeof digits} />
+        ))}
+      </DigitPair>
+    </MetaClockContainer>
   );
 });
 
