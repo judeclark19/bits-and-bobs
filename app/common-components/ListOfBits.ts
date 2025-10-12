@@ -7,6 +7,7 @@ import wordleMobile from "../../public/wordle-mobile.png";
 import minesweeper from "../../public/minesweeper.png";
 import sudoku from "../../public/sudoku.png";
 import spinDecider from "../../public/spin-decider.png";
+import clockOfClocks from "../../public/clockofclocks.jpg";
 import loremPicsum from "../../public/lorem-picsum.jpg";
 
 export const bitsAndBobs = [
@@ -20,8 +21,8 @@ export const bitsAndBobs = [
   {
     name: "Clock of Clocks",
     href: "/clock-of-clocks",
-    desktopImage: loremPicsum,
-    mobileImage: loremPicsum,
+    desktopImage: clockOfClocks,
+    mobileImage: clockOfClocks,
     alt: "Clock of Clocks"
   },
 
