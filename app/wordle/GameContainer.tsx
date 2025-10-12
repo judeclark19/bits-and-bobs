@@ -52,6 +52,7 @@ const GameContainer = observer(() => {
         keyboard.current
       );
       wordleGameState.buildGrid();
+      console.log(wordleGameState.targetWord);
     }
 
     return () => {

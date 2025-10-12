@@ -11,19 +11,28 @@ import loremPicsum from "../../public/lorem-picsum.jpg";
 
 export const bitsAndBobs = [
   {
-    name: "Snake",
-    href: "/snake",
-    desktopImage: snakeDesktop,
-    mobileImage: snakeMobile,
-    alt: "Snake game"
-  },
-  {
     name: "2048",
     href: "/2048",
     desktopImage: tfeDesktop,
     mobileImage: tfeMobile,
     alt: "2048 game"
   },
+  {
+    name: "Clock of Clocks",
+    href: "/clock-of-clocks",
+    desktopImage: loremPicsum,
+    mobileImage: loremPicsum,
+    alt: "Clock of Clocks"
+  },
+
+  {
+    name: "Snake",
+    href: "/snake",
+    desktopImage: snakeDesktop,
+    mobileImage: snakeMobile,
+    alt: "Snake game"
+  },
+
   {
     name: "Wordle",
     href: "/wordle",

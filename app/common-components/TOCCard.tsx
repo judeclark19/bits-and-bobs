@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
@@ -67,20 +68,18 @@ function TOCCard({
   }, [desktopImage, mobileImage]);
 
   return (
-    <TOCCardStyle
-      onClick={() => {
-        window.location.assign(href);
-      }}
-    >
-      {name} →
-      <Image
-        priority
-        src={responsiveImage}
-        alt={name}
-        width={imgDimensions.width}
-        height={imgDimensions.height}
-      />
-    </TOCCardStyle>
+    <Link href={href} passHref>
+      <TOCCardStyle>
+        {name} →
+        <Image
+          priority
+          src={responsiveImage}
+          alt={name}
+          width={imgDimensions.width}
+          height={imgDimensions.height}
+        />
+      </TOCCardStyle>
+    </Link>
   );
 }
 
