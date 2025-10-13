@@ -295,13 +295,19 @@ class MetaClockLogic {
 
     makeAutoObservable(this);
 
-    this.init();
+    // this.init();
   }
 
   init() {
     setInterval(() => {
       this.updateTime();
     }, 1000);
+  }
+
+  start() {
+    if (typeof window === "undefined") return; // guard SSR
+    this.updateTime(); // sync to client time immediately
+    this.init();
   }
 
   updateTime() {

@@ -19,7 +19,7 @@ export default function RootLayout({
           <footer>
             <div className="top">
               <div>
-                A 2023-2024&nbsp;
+                A 2023-2025&nbsp;
                 <strong>
                   <a href="https://github.com/judeclark19">Code Couture</a>
                 </strong>
@@ -41,7 +41,7 @@ export default function RootLayout({
                 </strong>
               </div>
             </div>
-            <div className="bottom">Last updated November 15, 2024</div>
+            <div className="bottom">Last updated October 12, 2025</div>
           </footer>
         </StyledComponentsRegistry>
       </body>

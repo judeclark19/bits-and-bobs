@@ -4,8 +4,12 @@ import { observer } from "mobx-react-lite";
 import metaClockLogic, { digits } from "./logic";
 import Digit from "./Digit";
 import { DigitPair, MetaClockContainer } from "./MetaClock.styles";
+import { useEffect } from "react";
 
 const MetaClock = observer(() => {
+  useEffect(() => {
+    metaClockLogic.start();
+  }, []);
   return (
     <MetaClockContainer>
       <DigitPair>
