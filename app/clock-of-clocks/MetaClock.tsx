@@ -8,17 +8,13 @@ import { DigitPair, MetaClockContainer } from "./MetaClock.styles";
 
 const MetaClock = observer(() => {
   const [store] = useState(() => new MetaClockLogic());
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     store.start();
     return () => {
       store.stop();
     };
   }, [store]);
-
-  if (!mounted) return null;
 
   return (
     <MetaClockContainer>
