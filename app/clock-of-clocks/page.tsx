@@ -1,11 +1,17 @@
+import dynamic from "next/dynamic";
 import { Metadata } from "next";
 import BackToHome from "../common-components/BackToHome";
-import MetaClock from "./MetaClock";
+const MetaClock = dynamic(() => import("./MetaClock"), { ssr: false });
+// import MetaClock from "./MetaClock";
 
 export const metadata: Metadata = {
   title: "Bits and Bobs | Clock of Clocks",
   description: "Clock of Clocks"
 };
+
+// export default function Page() {
+//   return <MetaClock />;
+// }
 
 export default function ClockOfClocksPage() {
   return (
