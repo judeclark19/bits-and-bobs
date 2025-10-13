@@ -301,6 +301,7 @@ export class MetaClockLogic {
   start() {
     if (typeof window === "undefined") return;
     if (this.timer !== undefined) return;
+    this.updateTime();
     this.timer = window.setInterval(() => {
       this.updateTime();
     }, 1000);
@@ -319,8 +320,4 @@ export class MetaClockLogic {
     this.minutes = this.time.getMinutes().toString().padStart(2, "0");
     this.seconds = this.time.getSeconds().toString().padStart(2, "0");
   }
-}
-
-export function createMetaClockLogic() {
-  return new MetaClockLogic();
 }
