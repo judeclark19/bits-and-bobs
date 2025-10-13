@@ -1,30 +1,36 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
-import metaClockLogic, { digits } from "./logic";
+import { digits, MetaClockLogic } from "./logic";
 import Digit from "./Digit";
 import { DigitPair, MetaClockContainer } from "./MetaClock.styles";
-import { useEffect } from "react";
 
 const MetaClock = observer(() => {
+  const [store] = useState(() => new MetaClockLogic());
+
   useEffect(() => {
-    metaClockLogic.start();
-  }, []);
+    store.start();
+    return () => {
+      store.stop();
+    };
+  }, [store]);
+
   return (
     <MetaClockContainer>
       <DigitPair>
-        {metaClockLogic.hours.split("").map((digit, index) => (
+        {store.hours.split("").map((digit, index) => (
           <Digit key={`hour-${index}`} value={digit as keyof typeof digits} />
         ))}
       </DigitPair>
 
       <DigitPair>
-        {metaClockLogic.minutes.split("").map((digit, index) => (
+        {store.minutes.split("").map((digit, index) => (
           <Digit key={`minute-${index}`} value={digit as keyof typeof digits} />
         ))}
       </DigitPair>
       <DigitPair>
-        {metaClockLogic.seconds.split("").map((digit, index) => (
+        {store.seconds.split("").map((digit, index) => (
           <Digit key={`second-${index}`} value={digit as keyof typeof digits} />
         ))}
       </DigitPair>

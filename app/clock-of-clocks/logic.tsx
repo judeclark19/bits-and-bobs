@@ -282,11 +282,13 @@ export const digits = {
   ]
 };
 
-class MetaClockLogic {
+export class MetaClockLogic {
   time: Date;
   hours: string;
   minutes: string;
   seconds: string;
+  private timer: number | undefined;
+
   constructor() {
     this.time = new Date();
     this.hours = this.time.getHours().toString().padStart(2, "0");
@@ -294,20 +296,21 @@ class MetaClockLogic {
     this.seconds = this.time.getSeconds().toString().padStart(2, "0");
 
     makeAutoObservable(this);
-
-    // this.init();
   }
 
-  init() {
-    setInterval(() => {
+  start() {
+    if (typeof window === "undefined") return;
+    if (this.timer !== undefined) return;
+    this.timer = window.setInterval(() => {
       this.updateTime();
     }, 1000);
   }
 
-  start() {
-    if (typeof window === "undefined") return; // guard SSR
-    this.updateTime(); // sync to client time immediately
-    this.init();
+  stop() {
+    if (this.timer !== undefined) {
+      clearInterval(this.timer);
+      this.timer = undefined;
+    }
   }
 
   updateTime() {
@@ -318,5 +321,6 @@ class MetaClockLogic {
   }
 }
 
-export const metaClockLogic = new MetaClockLogic();
-export default metaClockLogic;
+export function createMetaClockLogic() {
+  return new MetaClockLogic();
+}
