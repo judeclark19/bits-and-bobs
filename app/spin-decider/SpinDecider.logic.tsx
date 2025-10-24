@@ -9,6 +9,7 @@ type WheelItem = {
 
 class SpinDeciderState {
   isInitialized = false;
+  MAX_INPUTS = 100;
   wheelContainer: HTMLDivElement | null = null;
   inputsContainer: HTMLDivElement | null = null;
   inputs: HTMLInputElement[] | null = null;
@@ -35,10 +36,6 @@ class SpinDeciderState {
     this.wheelContainer = wheelContainer;
     this.inputsContainer = inputsContainer;
     this.inputs = Array.from(inputsContainer.querySelectorAll("input"));
-    console.log(
-      "inputs",
-      toJS(this.inputs).map((input) => input.value)
-    );
 
     this.props.items = this.inputs.map((input, i) => ({
       label: input.value === "" ? `Thing ${i + 1}` : input.value

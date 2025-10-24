@@ -31,6 +31,29 @@ export const SpinDeciderControls = styled.div`
   }
 `;
 
+export const IncrementAndDecrementButtons = styled.div`
+  /* background-color: red;
+  border: 3px solid yellow; */
+  display: flex;
+  gap: 4px;
+
+  button {
+    color: black;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+
+    // disabled
+    &:disabled {
+      background-color: #ccc;
+      color: #666;
+      cursor: not-allowed;
+    }
+  }
+`;
+
 export const SpinDeciderStyle = styled.div`
   margin-top: 2rem;
   position: relative;

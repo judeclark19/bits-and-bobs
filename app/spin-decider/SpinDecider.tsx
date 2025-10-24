@@ -3,7 +3,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import spinDeciderState from "./SpinDecider.logic";
 import Loader from "../common-components/Loader";
-import { SpinDeciderControls, SpinDeciderStyle } from "./SpinDecider.styles";
+import {
+  IncrementAndDecrementButtons,
+  SpinDeciderControls,
+  SpinDeciderStyle
+} from "./SpinDecider.styles";
 
 const SpinDecider = observer(() => {
   const wheelContainerRef = useRef<HTMLDivElement>(null);
@@ -12,6 +16,11 @@ const SpinDecider = observer(() => {
     spinDeciderState.props.items.length
   );
   const [canUpdate, setCanUpdate] = useState(false);
+
+  // keep values for all 100 potential inputs so they persist when hidden/re-added
+  const [values, setValues] = useState<string[]>(() =>
+    Array(spinDeciderState.MAX_INPUTS).fill("")
+  );
 
   useEffect(() => {
     if (
@@ -31,20 +40,64 @@ const SpinDecider = observer(() => {
       }}
     >
       <SpinDeciderControls>
-        <p>
-          Required: Enter number of things:{" "}
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            alignItems: "center"
+          }}
+        >
+          <p
+            style={{
+              margin: 0
+            }}
+          >
+            Required: Enter number of things:
+          </p>
           <input
             style={{ fontSize: "16px" }}
+            id="itemCount"
             type="number"
             value={itemCount}
             onChange={(e) => {
               setCanUpdate(true);
-              setItemCount(parseInt(e.target.value));
+              const next = Math.max(
+                2,
+                Math.min(
+                  spinDeciderState.MAX_INPUTS,
+                  Number(e.target.value) || 0
+                )
+              );
+              setItemCount(next);
             }}
             min="2"
-            max="100"
+            max={spinDeciderState.MAX_INPUTS}
           />
-        </p>
+          <IncrementAndDecrementButtons>
+            <button
+              onClick={() => {
+                if (itemCount > 2) {
+                  setCanUpdate(true);
+                  setItemCount(itemCount - 1);
+                }
+              }}
+              disabled={itemCount <= 2}
+            >
+              -
+            </button>
+            <button
+              onClick={() => {
+                if (itemCount < spinDeciderState.MAX_INPUTS) {
+                  setCanUpdate(true);
+                  setItemCount(itemCount + 1);
+                }
+              }}
+              disabled={itemCount >= spinDeciderState.MAX_INPUTS}
+            >
+              +
+            </button>
+          </IncrementAndDecrementButtons>
+        </div>
 
         <p>Optional: Enter thing names</p>
 
@@ -54,8 +107,15 @@ const SpinDecider = observer(() => {
               key={i}
               type="text"
               placeholder={`Thing ${i + 1}`}
+              value={values[i] ?? ""}
               onChange={(e) => {
                 setCanUpdate(true);
+                const v = e.target.value;
+                setValues((prev) => {
+                  const next = prev.slice();
+                  next[i] = v;
+                  return next;
+                });
               }}
             />
           ))}
@@ -66,6 +126,14 @@ const SpinDecider = observer(() => {
             onClick={() => {
               setCanUpdate(false);
               spinDeciderState.updateItemCount(itemCount);
+              const inputEls = inputsRef.current?.querySelectorAll("input");
+              if (inputEls) {
+                inputEls.forEach((el, idx) => {
+                  if (idx < itemCount) {
+                    (el as HTMLInputElement).value = values[idx] ?? "";
+                  }
+                });
+              }
             }}
           >
             Update Wheel
