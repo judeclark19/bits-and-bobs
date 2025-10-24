@@ -18,8 +18,8 @@ export default function ClockOfClocksPage() {
         }}
       >
         <h1>Clock of Clocks</h1>
+        <MetaClock />
       </div>
-      <MetaClock />
     </>
   );
 }
