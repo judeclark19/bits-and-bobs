@@ -12,22 +12,13 @@ import {
 } from "./FlagFlip.styles";
 
 import getUnicodeFlagIcon from "country-flag-icons/unicode";
-import { SwitchDiv } from "../common-components/ToggleSwtichStyle";
-
-// TODO: option to hide/show labels
 
 const FlagFlip: React.FC = () => {
   const [gameState, setGameState] = useState<FlagFlipLogic | null>(null);
-  const [showLabels, setShowLabels] = useState<boolean>(true);
+
   useEffect(() => {
     // Instantiate on client to avoid SSR/client randomization mismatch (hydration error)
     setGameState(new FlagFlipLogic());
-
-    // fetch showLabels from localStorage
-    const storedShowLabels = localStorage.getItem("flagflip-show-labels");
-    if (storedShowLabels !== null) {
-      setShowLabels(storedShowLabels === "true");
-    }
   }, []);
 
   if (!gameState) return null;
@@ -35,39 +26,12 @@ const FlagFlip: React.FC = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}
-      >
-        <strong>Country names</strong>
-        <SwitchDiv>
-          <p>Off</p>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={showLabels}
-              onChange={() => {
-                setShowLabels(!showLabels);
-                localStorage.setItem(
-                  "flagflip-show-labels",
-                  String(!showLabels)
-                );
-              }}
-            />
-            <span className="slider round"></span>
-          </label>
-          <p>On</p>
-        </SwitchDiv>
-      </div>
       <FlagFlipContainer>
-        {cards.map((card, i) => {
+        {cards.map((card) => {
           const unicodeFlagIcon = getUnicodeFlagIcon(card.countryCode);
           return (
             <CardStyle
-              key={`card-${i}`}
+              key={`g${gameState.version}-c${card.id}`}
               $flipped={card.isFlipped}
               onClick={() => {
                 if (card.isMatched || gameState.comparingCards.includes(card)) {
@@ -80,14 +44,16 @@ const FlagFlip: React.FC = () => {
                 }
               }}
             >
-              <CardFace $side="front">{/* blank front */}</CardFace>
+              <CardFace $side="front">{/* front is blank */}</CardFace>
               <CardFace
                 $side="back"
                 $matched={card.isMatched}
                 $error={card.isError}
               >
                 <FlagStyle>{unicodeFlagIcon}</FlagStyle>
-                {showLabels && <span>{countryNames[card.countryCode]}</span>}
+                {card.isMatched && (
+                  <span>{countryNames[card.countryCode]}</span>
+                )}
               </CardFace>
             </CardStyle>
           );
