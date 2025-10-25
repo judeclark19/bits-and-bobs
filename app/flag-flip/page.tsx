@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 import BackToHome from "../common-components/BackToHome";
-import MemoryMatch from "./MemoryMatch";
+import FlagFlip from "./FlagFlip";
 // const MetaClock = dynamic(() => import("./MetaClock"), { ssr: false });
 
 export const metadata: Metadata = {
-  title: "Bits and Bobs | Memory Match",
-  description: "Memory Match Game"
+  title: "Bits and Bobs | Flag Flip",
+  description: "Flag Flip Game"
 };
 
 export default function MemoryMatchPage() {
@@ -17,8 +17,12 @@ export default function MemoryMatchPage() {
           padding: "20px"
         }}
       >
-        <h1>Memory Match</h1>
-        <MemoryMatch />
+        <h1>Flag Flip</h1>
+        <p>
+          Flip cards two at a time to reveal random flags of the world. Match
+          all pairs to win!
+        </p>
+        <FlagFlip />
       </div>
       {/* <MetaClock /> */}
     </>

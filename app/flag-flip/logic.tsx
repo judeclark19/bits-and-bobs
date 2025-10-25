@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { countries } from "country-flag-icons";
+import { get } from "http";
 
 export const countryNames: Record<string, string> = {
   AC: "Ascension Island",
@@ -259,13 +260,17 @@ export const countryNames: Record<string, string> = {
 };
 
 class MatchCard {
+  index: number;
   isFlipped: boolean;
   isMatched: boolean;
+  isError: boolean;
   countryCode: string;
 
-  constructor(countryCode: string) {
+  constructor(index: number, countryCode: string) {
+    this.index = index;
     this.isFlipped = false;
     this.isMatched = false;
+    this.isError = false;
     this.countryCode = countryCode;
     makeAutoObservable(this);
   }
@@ -274,29 +279,71 @@ class MatchCard {
     this.isFlipped = value;
   }
 
+  setErrorFlash() {
+    this.isError = true;
+    setTimeout(() => {
+      this.isError = false;
+    }, 600); // lasts 0.6s
+  }
+
   setMatched(value: boolean) {
     this.isMatched = value;
   }
 }
 
-class MemoryMatchLogic {
-  // flipped: boolean;
-  cardSizePx: number = 120;
+class FlagFlipLogic {
   cards: MatchCard[];
+  comparingCards: MatchCard[] = [];
 
   constructor() {
-    // this.flipped = false;
-    this.cards = countries
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 8)
-      .flatMap((code) => [new MatchCard(code), new MatchCard(code)])
-      .sort(() => 0.5 - Math.random());
+    this.cards = this.getRandomizedCards();
+
     makeAutoObservable(this);
   }
 
-  // setFlipped(value: boolean) {
-  //   this.flipped = value;
-  // }
+  getRandomizedCards(): MatchCard[] {
+    return countries
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 8)
+      .flatMap((code) => [code, code])
+      .sort(() => 0.5 - Math.random())
+      .map((code, index) => new MatchCard(index, code));
+  }
+
+  compare(card: MatchCard) {
+    if (this.comparingCards.includes(card) || card.isMatched) {
+      return;
+    }
+
+    this.comparingCards.push(card);
+
+    if (this.comparingCards.length === 2) {
+      const [firstCard, secondCard] = this.comparingCards;
+      if (firstCard.countryCode === secondCard.countryCode) {
+        firstCard.setMatched(true);
+        secondCard.setMatched(true);
+      } else {
+        setTimeout(() => {
+          firstCard.setErrorFlash();
+          secondCard.setErrorFlash();
+          setTimeout(() => {
+            firstCard.setFlipped(false);
+            secondCard.setFlipped(false);
+          }, 450);
+        }, 450);
+      }
+      this.comparingCards = [];
+    }
+  }
+
+  resetGame() {
+    this.cards.forEach((card) => card.setFlipped(false));
+
+    setTimeout(() => {
+      this.cards = this.getRandomizedCards();
+      this.comparingCards = [];
+    }, 450);
+  }
 }
 
-export default MemoryMatchLogic;
+export default FlagFlipLogic;

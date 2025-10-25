@@ -8,6 +8,7 @@ import minesweeper from "../../public/minesweeper.png";
 import sudoku from "../../public/sudoku.png";
 import spinDecider from "../../public/spin-decider.png";
 import clockOfClocks from "../../public/clockofclocks.jpg";
+import flagFlip from "../../public/flagflip.png";
 import loremPicsum from "../../public/lorem-picsum.jpg";
 
 export const bitsAndBobs = [
@@ -61,5 +62,12 @@ export const bitsAndBobs = [
     desktopImage: spinDecider,
     mobileImage: spinDecider,
     alt: "Spin Decider"
+  },
+  {
+    name: "Flag Flip",
+    href: "/flag-flip",
+    desktopImage: flagFlip,
+    mobileImage: flagFlip,
+    alt: "Flag Flip game"
   }
 ];
