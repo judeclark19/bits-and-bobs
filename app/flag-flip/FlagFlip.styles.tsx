@@ -7,6 +7,7 @@ export const FlagFlipContainer = styled.div`
 
   max-width: 540px;
   margin: 0 auto;
+  margin-top: 2rem;
 
   @media screen and (max-width: 600px) {
     gap: 12px;

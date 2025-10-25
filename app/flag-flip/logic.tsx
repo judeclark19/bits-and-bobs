@@ -260,14 +260,14 @@ export const countryNames: Record<string, string> = {
 };
 
 class MatchCard {
-  index: number;
+  id: number; // unique across games
   isFlipped: boolean;
   isMatched: boolean;
   isError: boolean;
   countryCode: string;
 
-  constructor(index: number, countryCode: string) {
-    this.index = index;
+  constructor(id: number, countryCode: string) {
+    this.id = id;
     this.isFlipped = false;
     this.isMatched = false;
     this.isError = false;
@@ -294,20 +294,44 @@ class MatchCard {
 class FlagFlipLogic {
   cards: MatchCard[];
   comparingCards: MatchCard[] = [];
+  allMatched: boolean = false;
+  version: number = 0; // increments each (re)deal so React keys change across games
+  private nextId: number = 1; // unique id source for cards
+  private lastPickedCountries: string[] = [];
 
   constructor() {
-    this.cards = this.getRandomizedCards();
-
+    this.dealNewGame();
+    this.cards = this.buildRandomizedCards();
     makeAutoObservable(this);
   }
 
-  getRandomizedCards(): MatchCard[] {
-    return countries
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 8)
+  private buildRandomizedCards(): MatchCard[] {
+    // Make a fresh copy of all country codes
+    const available = [...countries];
+    // Remove the ones used in the previous game
+    const filtered = available.filter(
+      (c) => !this.lastPickedCountries.includes(c)
+    );
+
+    // Shuffle and pick 8 new unique countries
+    const picked = filtered.sort(() => 0.5 - Math.random()).slice(0, 8);
+
+    // Remember these for next round
+    this.lastPickedCountries = picked;
+
+    // Double them up and shuffle for card pairing
+    const doubled = picked
       .flatMap((code) => [code, code])
-      .sort(() => 0.5 - Math.random())
-      .map((code, index) => new MatchCard(index, code));
+      .sort(() => 0.5 - Math.random());
+
+    return doubled.map((code) => new MatchCard(this.nextId++, code));
+  }
+
+  private dealNewGame() {
+    this.allMatched = false;
+    this.version += 1;
+    this.cards = this.buildRandomizedCards();
+    this.comparingCards = [];
   }
 
   compare(card: MatchCard) {
@@ -322,6 +346,10 @@ class FlagFlipLogic {
       if (firstCard.countryCode === secondCard.countryCode) {
         firstCard.setMatched(true);
         secondCard.setMatched(true);
+
+        if (this.cards.every((c) => c.isMatched)) {
+          this.allMatched = true;
+        }
       } else {
         setTimeout(() => {
           firstCard.setErrorFlash();
@@ -338,10 +366,8 @@ class FlagFlipLogic {
 
   resetGame() {
     this.cards.forEach((card) => card.setFlipped(false));
-
     setTimeout(() => {
-      this.cards = this.getRandomizedCards();
-      this.comparingCards = [];
+      this.dealNewGame();
     }, 450);
   }
 }
