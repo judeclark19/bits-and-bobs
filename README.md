@@ -12,3 +12,5 @@ Just a couple games for fun!
 - Minesweeper
 - Sudoku
 - Spin Decider
+- Clock of Clocks (not a game but hey)
+- Flag Flip (memory matching)

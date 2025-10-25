@@ -4,7 +4,6 @@ export const MetaClockContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 2rem;
-  padding: 0 20px;
 
   @media screen and (max-width: 1200px) {
     flex-direction: column;
