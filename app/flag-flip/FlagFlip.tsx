@@ -103,7 +103,7 @@ const FlagFlip: React.FC = () => {
             marginBottom: "1rem"
           }}
         >
-          <span>Wins: 0</span>
+          <span>Wins: {gameState.winCounters[gameState.difficulty]}</span>
           <span
             style={{
               color: DIFFICULTIES[gameState.difficulty].color

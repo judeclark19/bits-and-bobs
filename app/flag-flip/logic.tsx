@@ -271,7 +271,7 @@ export const DIFFICULTIES: Record<
   }
 > = {
   0: {
-    id: "Easy",
+    id: "easy",
     name: "Easy",
     description: "Country names always shown",
     color: "var(--game-green)"
@@ -341,16 +341,42 @@ class FlagFlipLogic {
   version: number = 0; // increments each (re)deal so React keys change across games
   private nextId: number = 1; // unique id source for cards
   private lastPickedCountries: string[] = [];
+  winCounters: Record<DifficultyLevel, number> = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0
+  };
 
   constructor() {
     this.cards = [];
     makeAutoObservable(this, {}, { autoBind: true });
+
+    this.initLocalStorage();
+  }
+
+  private initLocalStorage() {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("flag-flip-difficulty");
-      if (stored !== null) {
-        const parsed = parseInt(stored, 10);
+      const storedDifficulty = localStorage.getItem("flag-flip-difficulty");
+      if (storedDifficulty !== null) {
+        const parsed = parseInt(storedDifficulty, 10);
         if (parsed >= 0 && parsed <= 3)
           this.difficulty = parsed as DifficultyLevel;
+      }
+
+      const storedWins = localStorage.getItem("flag-flip-win-counters");
+      if (storedWins !== null) {
+        try {
+          const parsed = JSON.parse(storedWins);
+          this.winCounters = {
+            0: parsed["0"] || 0,
+            1: parsed["1"] || 0,
+            2: parsed["2"] || 0,
+            3: parsed["3"] || 0
+          };
+        } catch {
+          // ignore parse errors
+        }
       }
     }
     this.dealNewGame();
@@ -422,6 +448,13 @@ class FlagFlipLogic {
 
     if (this.cards.every((c) => c.isMatched)) {
       this.allMatched = true;
+      this.winCounters[this.difficulty] += 1;
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          "flag-flip-win-counters",
+          JSON.stringify(this.winCounters)
+        );
+      }
     }
   }
 

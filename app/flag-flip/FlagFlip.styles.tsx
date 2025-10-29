@@ -102,6 +102,10 @@ export const FlagFlipGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, auto);
   gap: 20px;
+
+  @media screen and (max-width: 600px) {
+    gap: 8px;
+  }
 `;
 
 export const Overlay = styled.div`
