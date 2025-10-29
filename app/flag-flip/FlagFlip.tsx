@@ -6,8 +6,11 @@ import { observer } from "mobx-react-lite";
 import {
   CardFace,
   CardStyle,
+  DifficultyChoicesWrapper,
+  DifficultyFieldset,
   FlagFlipContainer,
   FlagStyle,
+  Overlay,
   ResetButton
 } from "./FlagFlip.styles";
 
@@ -15,18 +18,157 @@ import getUnicodeFlagIcon from "country-flag-icons/unicode";
 
 const FlagFlip: React.FC = () => {
   const [gameState, setGameState] = useState<FlagFlipLogic | null>(null);
-
+  const [overlayState, setOverlayState] = useState<"guessing" | "incorrect">(
+    "guessing"
+  );
   useEffect(() => {
     // Instantiate on client to avoid SSR/client randomization mismatch (hydration error)
     setGameState(new FlagFlipLogic());
   }, []);
+
+  const onDifficultyChange = (newDifficulty: 0 | 1 | 2 | 3) => {
+    if (!gameState) return;
+    gameState.setDifficulty(newDifficulty);
+  };
 
   if (!gameState) return null;
   const { cards } = gameState;
 
   return (
     <div>
+      <div>
+        <DifficultyFieldset>
+          <legend>Difficulty:</legend>
+          <DifficultyChoicesWrapper>
+            <div>
+              <input
+                type="radio"
+                id="easy"
+                name="flag-flip-difficulty"
+                value={0}
+                checked={gameState.difficulty === 0}
+                onChange={() => {
+                  onDifficultyChange(0);
+                }}
+                aria-describedby="easy-desc"
+              />
+              <label htmlFor="easy">Easy</label>
+              <br />
+              <span id="easy-desc">Country names always shown</span>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="medium"
+                name="flag-flip-difficulty"
+                value={1}
+                checked={gameState.difficulty === 1}
+                onChange={() => {
+                  onDifficultyChange(1);
+                }}
+                aria-describedby="medium-desc"
+              />
+              <label htmlFor="medium">Medium</label>
+              <br />
+              <span id="medium-desc">Country names shown upon each match</span>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="hard"
+                name="flag-flip-difficulty"
+                value={2}
+                checked={gameState.difficulty === 2}
+                onChange={() => {
+                  onDifficultyChange(2);
+                }}
+                aria-describedby="hard-desc"
+              />
+              <label htmlFor="hard">Hard</label>
+              <br />
+              <span id="hard-desc">
+                Country names shown when all matches are made
+              </span>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="very-hard"
+                name="flag-flip-difficulty"
+                value={3}
+                checked={gameState.difficulty === 3}
+                onChange={() => {
+                  onDifficultyChange(3);
+                }}
+                aria-describedby="very-hard-desc"
+              />
+              <label htmlFor="very-hard">Very Hard</label>
+              <br />
+              <span id="very-hard-desc">
+                After each match, you have to correctly identify the country
+                name.
+                <br />
+                If you get it wrong, the game resets with new flags!
+              </span>
+            </div>
+          </DifficultyChoicesWrapper>
+        </DifficultyFieldset>
+      </div>
       <FlagFlipContainer>
+        {gameState.overlayIsOpen && (
+          <Overlay>
+            {overlayState === "guessing" && (
+              <>
+                <div>Which country is this?</div>
+                <div style={{ fontSize: "5rem" }}>
+                  {getUnicodeFlagIcon(gameState.comparingCards[0].countryCode)}
+                </div>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.currentTarget);
+                    const selectedCountry = formData.get("country") as string;
+
+                    const correctCountry =
+                      gameState.comparingCards[0].countryCode;
+                    if (selectedCountry === correctCountry) {
+                      gameState.overlayIsOpen = false;
+                      gameState.successfulMatch();
+                    } else {
+                      setOverlayState("incorrect");
+                    }
+                  }}
+                >
+                  <select name="country" required>
+                    <option value="">Select a country...</option>
+                    {Object.entries(countryNames).map(([code, name]) => (
+                      <option key={code} value={code}>
+                        {name}
+                      </option>
+                    ))}
+                  </select>
+                  <button type="submit" style={{ backgroundColor: "#333" }}>
+                    Submit
+                  </button>
+                </form>
+              </>
+            )}
+            {overlayState === "incorrect" && (
+              <>
+                <div style={{ textAlign: "center" }}>
+                  Sorry, the correct answer was
+                  <br />
+                  <strong>
+                    {countryNames[gameState.comparingCards[0].countryCode]}
+                  </strong>
+                  .<br />
+                  You may now restart the game.
+                </div>
+              </>
+            )}
+          </Overlay>
+        )}
         {cards.map((card) => {
           const unicodeFlagIcon = getUnicodeFlagIcon(card.countryCode);
           return (
@@ -51,7 +193,9 @@ const FlagFlip: React.FC = () => {
                 $error={card.isError}
               >
                 <FlagStyle>{unicodeFlagIcon}</FlagStyle>
-                {card.isMatched && (
+                {(gameState.difficulty === 0 ||
+                  (gameState.difficulty === 1 && card.isMatched) ||
+                  (gameState.difficulty >= 2 && gameState.allMatched)) && (
                   <span>{countryNames[card.countryCode]}</span>
                 )}
               </CardFace>

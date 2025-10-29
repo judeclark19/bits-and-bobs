@@ -1,6 +1,36 @@
 import { styled } from "styled-components";
 
+export const DifficultyFieldset = styled.fieldset`
+  border: 2px solid var(--pharaoh);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+
+  legend {
+    font-size: 18px;
+    padding: 0 8px;
+  }
+`;
+
+export const DifficultyChoicesWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+
+  label {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  span {
+    display: block;
+    margin-left: 20px;
+    color: var(--gray);
+  }
+`;
+
 export const FlagFlipContainer = styled.div`
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, auto);
   gap: 20px;
@@ -11,6 +41,44 @@ export const FlagFlipContainer = styled.div`
 
   @media screen and (max-width: 600px) {
     gap: 12px;
+  }
+`;
+
+export const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+  z-index: 10;
+
+  form {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    select {
+      background-color: #555;
+      color: white;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        filter: brightness(1.1);
+      }
+    }
   }
 `;
 

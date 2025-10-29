@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import BackToHome from "../common-components/BackToHome";
 import FlagFlip from "./FlagFlip";
-// const MetaClock = dynamic(() => import("./MetaClock"), { ssr: false });
 
 export const metadata: Metadata = {
   title: "Bits and Bobs | Flag Flip",
@@ -14,7 +13,8 @@ export default function MemoryMatchPage() {
       <BackToHome />
       <div
         style={{
-          padding: "20px"
+          padding: "20px",
+          maxWidth: "1025px"
         }}
       >
         <h1>Flag Flip</h1>
@@ -24,7 +24,6 @@ export default function MemoryMatchPage() {
         </p>
         <FlagFlip />
       </div>
-      {/* <MetaClock /> */}
     </>
   );
 }
