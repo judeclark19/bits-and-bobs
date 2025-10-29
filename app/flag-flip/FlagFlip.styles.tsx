@@ -1,5 +1,63 @@
 import { styled } from "styled-components";
 
+export const DifficultyCollapsible = styled.details`
+  border: 2px solid var(--pharaoh);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+
+  &::details-content {
+    height: 0;
+    transition: height 0.3s, content-visibility 0.3s;
+    transition-behavior: allow-discrete;
+  }
+
+  &[open]::details-content {
+    height: auto;
+  }
+`;
+
+export const DifficultySummary = styled.summary`
+  cursor: pointer;
+  padding: 8px 12px;
+  font-size: 18px;
+  font-weight: 600;
+  list-style: none;
+  outline: none;
+
+  /* Remove default marker in WebKit (optional) */
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Triangle caret */
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-right: 8px;
+    border-left: 6px solid currentColor; /* triangle color follows text */
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transition: transform 0.2s ease;
+    transform-origin: 2px 50%;
+  }
+
+  :host-context(details[open]) &::before {
+    transform: rotate(90deg);
+  }
+  details[open] > &::before {
+    transform: rotate(90deg);
+  }
+`;
+
+export const DifficultyContent = styled.div`
+  padding: 16px;
+`;
+
 export const DifficultyFieldset = styled.fieldset`
   border: 2px solid var(--pharaoh);
   border-radius: 8px;
@@ -31,10 +89,6 @@ export const DifficultyChoicesWrapper = styled.div`
 
 export const FlagFlipContainer = styled.div`
   position: relative;
-  display: grid;
-  grid-template-columns: repeat(4, auto);
-  gap: 20px;
-
   max-width: 540px;
   margin: 0 auto;
   margin-top: 2rem;
@@ -44,13 +98,19 @@ export const FlagFlipContainer = styled.div`
   }
 `;
 
+export const FlagFlipGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 20px;
+`;
+
 export const Overlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
   justify-content: center;

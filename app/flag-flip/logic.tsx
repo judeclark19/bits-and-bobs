@@ -1,5 +1,3 @@
-export type Difficulty = 0 | 1 | 2 | 3;
-
 import { makeAutoObservable, runInAction } from "mobx";
 import { countries } from "country-flag-icons";
 
@@ -260,6 +258,46 @@ export const countryNames: Record<string, string> = {
   ZW: "Zimbabwe"
 };
 
+// Difficulty levels mapping
+export type DifficultyLevel = 0 | 1 | 2 | 3;
+
+export const DIFFICULTIES: Record<
+  DifficultyLevel,
+  {
+    id: string;
+    name: string;
+    description: string;
+    color: string;
+  }
+> = {
+  0: {
+    id: "Easy",
+    name: "Easy",
+    description: "Country names always shown",
+    color: "var(--game-green)"
+  },
+  1: {
+    id: "medium",
+    name: "Medium",
+    description: "Country names shown upon each match",
+    color: "var(--game-yellow)"
+  },
+  2: {
+    id: "hard",
+    name: "Hard",
+    description:
+      "After each match, you have to correctly identify the country name.",
+    color: "var(--game-red)"
+  },
+  3: {
+    id: "very-hard",
+    name: "Very Hard",
+    description:
+      "If you guess the country name wrong, the game resets with new flags!",
+    color: "hotpink"
+  }
+};
+
 class MatchCard {
   id: number; // unique across games
   isFlipped: boolean;
@@ -298,7 +336,7 @@ class FlagFlipLogic {
   cards: MatchCard[];
   comparingCards: MatchCard[] = [];
   allMatched: boolean = false;
-  difficulty: Difficulty = 1;
+  difficulty: DifficultyLevel = 1;
   overlayIsOpen: boolean = false;
   version: number = 0; // increments each (re)deal so React keys change across games
   private nextId: number = 1; // unique id source for cards
@@ -311,13 +349,14 @@ class FlagFlipLogic {
       const stored = localStorage.getItem("flag-flip-difficulty");
       if (stored !== null) {
         const parsed = parseInt(stored, 10);
-        if (parsed >= 0 && parsed <= 3) this.difficulty = parsed as Difficulty;
+        if (parsed >= 0 && parsed <= 3)
+          this.difficulty = parsed as DifficultyLevel;
       }
     }
     this.dealNewGame();
   }
 
-  setDifficulty(newDifficulty: Difficulty) {
+  setDifficulty(newDifficulty: DifficultyLevel) {
     this.difficulty = newDifficulty;
     if (typeof window !== "undefined") {
       localStorage.setItem("flag-flip-difficulty", String(newDifficulty));
@@ -364,26 +403,13 @@ class FlagFlipLogic {
       const [firstCard, secondCard] = this.comparingCards;
       if (
         firstCard.countryCode === secondCard.countryCode &&
-        this.difficulty === 3
+        this.difficulty >= 2
       ) {
-        // In very hard mode, ask for country name
         this.overlayIsOpen = true;
       } else if (firstCard.countryCode === secondCard.countryCode) {
         this.successfulMatch();
       } else {
-        this.comparingCards = [];
-        setTimeout(() => {
-          // trigger the visual error flash (each handles its own timeout)
-          firstCard.setErrorFlash();
-          secondCard.setErrorFlash();
-          // then flip back inside an action
-          setTimeout(() => {
-            runInAction(() => {
-              firstCard.setFlipped(false);
-              secondCard.setFlipped(false);
-            });
-          }, 450);
-        }, 450);
+        this.failedMatch();
       }
     }
   }
@@ -397,6 +423,23 @@ class FlagFlipLogic {
     if (this.cards.every((c) => c.isMatched)) {
       this.allMatched = true;
     }
+  }
+
+  failedMatch() {
+    const [firstCard, secondCard] = this.comparingCards;
+    this.comparingCards = [];
+    setTimeout(() => {
+      // trigger the visual error flash (each handles its own timeout)
+      firstCard.setErrorFlash();
+      secondCard.setErrorFlash();
+      // then flip back inside an action
+      setTimeout(() => {
+        runInAction(() => {
+          firstCard.setFlipped(false);
+          secondCard.setFlipped(false);
+        });
+      }, 450);
+    }, 450);
   }
 
   resetGame() {

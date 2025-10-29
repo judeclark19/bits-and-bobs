@@ -3,14 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import wordleGameState from "./logic/Game";
 import { observer } from "mobx-react-lite";
-import {
-  GuessingGrid,
-  Keyboard,
-  Shade,
-  wordleGreen,
-  wordleRed,
-  Wrapper
-} from "./GameContainer.styles";
+import { GuessingGrid, Keyboard, Shade, Wrapper } from "./GameContainer.styles";
 import Loader from "../common-components/Loader";
 
 const GameContainer = observer(() => {
@@ -121,7 +114,7 @@ const GameContainer = observer(() => {
             wordleGameState.restartGame();
           }}
           style={{
-            backgroundColor: wordleGreen,
+            backgroundColor: "var(--game-green)",
             width: "fit-content"
           }}
         >
@@ -132,7 +125,7 @@ const GameContainer = observer(() => {
             wordleGameState.giveUp();
           }}
           style={{
-            backgroundColor: wordleRed,
+            backgroundColor: "var(--game-red)",
             width: "fit-content"
           }}
         >

@@ -9,6 +9,13 @@ const GlobalStyles = createGlobalStyle`
   --pharaoh: #636081;
   --periwinkle: #82809A;
   --gray: #C1C0CD;
+
+  --game-green: #58A351;
+  --game-yellow: #F7DA22;
+  --game-red: #D32F2F;
+  
+  interpolate-size: allow-keywords;
+
  }
 
   body {

@@ -1,7 +1,6 @@
 import { makeAutoObservable, toJS } from "mobx";
 import { wordBank } from "./WordBank";
 import Cell from "./Cell";
-import { wordleGreen, wordleRed, wordleYellow } from "../GameContainer.styles";
 
 const keys = [
   ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -134,7 +133,7 @@ class WordleGameLogic {
       } else {
         this.cells[this.turns].forEach((cell) => {
           if (!cell.letter) {
-            cell.cellElement.style.backgroundColor = wordleRed;
+            cell.cellElement.style.backgroundColor = "var(--game-red)";
 
             setTimeout(() => {
               cell.cellElement.style.backgroundColor = "transparent";
@@ -170,7 +169,7 @@ class WordleGameLogic {
     if (!wordBank.includes(wordToGuess)) {
       // not a valid word, turn cells red
       this.cells[this.turns].forEach((cell) => {
-        cell.cellElement.style.backgroundColor = wordleRed;
+        cell.cellElement.style.backgroundColor = "var(--game-red)";
 
         setTimeout(() => {
           cell.cellElement.style.backgroundColor = "transparent";
@@ -212,9 +211,9 @@ class WordleGameLogic {
           (button) => button.textContent === this.currentGuess[i]
         );
 
-        this.cells[this.turns][i].setBackgroundColor(wordleGreen);
+        this.cells[this.turns][i].setBackgroundColor("var(--game-green)");
         targetCompare[i] = "";
-        key?.style.setProperty("background-color", wordleGreen);
+        key?.style.setProperty("background-color", "var(--game-green)");
       }
     }
 
@@ -229,9 +228,11 @@ class WordleGameLogic {
         targetCompare[
           targetCompare.indexOf(this.currentGuess[i].toLowerCase())
         ] = "";
-        if (this.cells[this.turns][i].getBackgroundColor() !== wordleGreen) {
-          this.cells[this.turns][i].setBackgroundColor(wordleYellow);
-          key?.style.setProperty("background-color", wordleYellow);
+        if (
+          this.cells[this.turns][i].getBackgroundColor() !== "var(--game-green)"
+        ) {
+          this.cells[this.turns][i].setBackgroundColor("var(--game-yellow)");
+          key?.style.setProperty("background-color", "var(--game-yellow)");
         }
       }
     }

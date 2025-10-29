@@ -14,7 +14,7 @@ export default function MemoryMatchPage() {
       <div
         style={{
           padding: "20px",
-          maxWidth: "1025px"
+          maxWidth: "590px"
         }}
       >
         <h1>Flag Flip</h1>

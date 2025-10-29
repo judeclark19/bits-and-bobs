@@ -1,17 +1,24 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import FlagFlipLogic, { countryNames } from "./logic";
+import FlagFlipLogic, {
+  countryNames,
+  DIFFICULTIES,
+  DifficultyLevel
+} from "./logic";
 import { observer } from "mobx-react-lite";
 import {
   CardFace,
   CardStyle,
   DifficultyChoicesWrapper,
-  DifficultyFieldset,
+  DifficultyCollapsible,
+  DifficultySummary,
+  DifficultyContent,
   FlagFlipContainer,
   FlagStyle,
   Overlay,
-  ResetButton
+  ResetButton,
+  FlagFlipGrid
 } from "./FlagFlip.styles";
 
 import getUnicodeFlagIcon from "country-flag-icons/unicode";
@@ -26,94 +33,11 @@ const FlagFlip: React.FC = () => {
     setGameState(new FlagFlipLogic());
   }, []);
 
-  const onDifficultyChange = (newDifficulty: 0 | 1 | 2 | 3) => {
-    if (!gameState) return;
-    gameState.setDifficulty(newDifficulty);
-  };
-
   if (!gameState) return null;
   const { cards } = gameState;
 
   return (
     <div>
-      <div>
-        <DifficultyFieldset>
-          <legend>Difficulty:</legend>
-          <DifficultyChoicesWrapper>
-            <div>
-              <input
-                type="radio"
-                id="easy"
-                name="flag-flip-difficulty"
-                value={0}
-                checked={gameState.difficulty === 0}
-                onChange={() => {
-                  onDifficultyChange(0);
-                }}
-                aria-describedby="easy-desc"
-              />
-              <label htmlFor="easy">Easy</label>
-              <br />
-              <span id="easy-desc">Country names always shown</span>
-            </div>
-            <div>
-              <input
-                type="radio"
-                id="medium"
-                name="flag-flip-difficulty"
-                value={1}
-                checked={gameState.difficulty === 1}
-                onChange={() => {
-                  onDifficultyChange(1);
-                }}
-                aria-describedby="medium-desc"
-              />
-              <label htmlFor="medium">Medium</label>
-              <br />
-              <span id="medium-desc">Country names shown upon each match</span>
-            </div>
-            <div>
-              <input
-                type="radio"
-                id="hard"
-                name="flag-flip-difficulty"
-                value={2}
-                checked={gameState.difficulty === 2}
-                onChange={() => {
-                  onDifficultyChange(2);
-                }}
-                aria-describedby="hard-desc"
-              />
-              <label htmlFor="hard">Hard</label>
-              <br />
-              <span id="hard-desc">
-                Country names shown when all matches are made
-              </span>
-            </div>
-            <div>
-              <input
-                type="radio"
-                id="very-hard"
-                name="flag-flip-difficulty"
-                value={3}
-                checked={gameState.difficulty === 3}
-                onChange={() => {
-                  onDifficultyChange(3);
-                }}
-                aria-describedby="very-hard-desc"
-              />
-              <label htmlFor="very-hard">Very Hard</label>
-              <br />
-              <span id="very-hard-desc">
-                After each match, you have to correctly identify the country
-                name.
-                <br />
-                If you get it wrong, the game resets with new flags!
-              </span>
-            </div>
-          </DifficultyChoicesWrapper>
-        </DifficultyFieldset>
-      </div>
       <FlagFlipContainer>
         {gameState.overlayIsOpen && (
           <Overlay>
@@ -135,8 +59,11 @@ const FlagFlip: React.FC = () => {
                     if (selectedCountry === correctCountry) {
                       gameState.overlayIsOpen = false;
                       gameState.successfulMatch();
-                    } else {
+                    } else if (gameState.difficulty === 3) {
                       setOverlayState("incorrect");
+                    } else {
+                      gameState.overlayIsOpen = false;
+                      gameState.failedMatch();
                     }
                   }}
                 >
@@ -144,7 +71,7 @@ const FlagFlip: React.FC = () => {
                     <option value="">Select a country...</option>
                     {Object.entries(countryNames).map(([code, name]) => (
                       <option key={code} value={code}>
-                        {name}
+                        {code}: {name}
                       </option>
                     ))}
                   </select>
@@ -169,45 +96,67 @@ const FlagFlip: React.FC = () => {
             )}
           </Overlay>
         )}
-        {cards.map((card) => {
-          const unicodeFlagIcon = getUnicodeFlagIcon(card.countryCode);
-          return (
-            <CardStyle
-              key={`g${gameState.version}-c${card.id}`}
-              $flipped={card.isFlipped}
-              onClick={() => {
-                if (card.isMatched || gameState.comparingCards.includes(card)) {
-                  return;
-                }
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "1rem"
+          }}
+        >
+          <span>Wins: 0</span>
+          <span
+            style={{
+              color: DIFFICULTIES[gameState.difficulty].color
+            }}
+          >
+            {DIFFICULTIES[gameState.difficulty].name}
+          </span>
+        </div>
+        <FlagFlipGrid>
+          {cards.map((card) => {
+            const unicodeFlagIcon = getUnicodeFlagIcon(card.countryCode);
+            return (
+              <CardStyle
+                key={`g${gameState.version}-c${card.id}`}
+                $flipped={card.isFlipped}
+                onClick={() => {
+                  if (
+                    card.isMatched ||
+                    gameState.comparingCards.includes(card)
+                  ) {
+                    return;
+                  }
 
-                if (!card.isFlipped && !card.isMatched) {
-                  card.setFlipped(true);
-                  gameState.compare(card);
-                }
-              }}
-            >
-              <CardFace $side="front">{/* front is blank */}</CardFace>
-              <CardFace
-                $side="back"
-                $matched={card.isMatched}
-                $error={card.isError}
+                  if (!card.isFlipped && !card.isMatched) {
+                    card.setFlipped(true);
+                    gameState.compare(card);
+                  }
+                }}
               >
-                <FlagStyle>{unicodeFlagIcon}</FlagStyle>
-                {(gameState.difficulty === 0 ||
-                  (gameState.difficulty === 1 && card.isMatched) ||
-                  (gameState.difficulty >= 2 && gameState.allMatched)) && (
-                  <span>{countryNames[card.countryCode]}</span>
-                )}
-              </CardFace>
-            </CardStyle>
-          );
-        })}
+                <CardFace $side="front">{/* front is blank */}</CardFace>
+                <CardFace
+                  $side="back"
+                  $matched={card.isMatched}
+                  $error={card.isError}
+                >
+                  <FlagStyle>{unicodeFlagIcon}</FlagStyle>
+                  {(gameState.difficulty === 0 ||
+                    (gameState.difficulty >= 1 && card.isMatched) ||
+                    gameState.allMatched) && (
+                    <span>{countryNames[card.countryCode]}</span>
+                  )}
+                </CardFace>
+              </CardStyle>
+            );
+          })}
+        </FlagFlipGrid>
       </FlagFlipContainer>
       <div
         style={{
           display: "flex",
           justifyContent: "center",
-          marginTop: "1.5rem"
+          marginTop: "1.5rem",
+          marginBottom: "1.5rem"
         }}
       >
         <ResetButton id="reset-flagflip" onClick={() => gameState.resetGame()}>
@@ -224,6 +173,51 @@ const FlagFlip: React.FC = () => {
           </svg>
         </ResetButton>
       </div>
+      <DifficultyCollapsible open>
+        <DifficultySummary id="difficulty-summary">
+          Difficulty -{" "}
+          <span
+            style={{
+              color: DIFFICULTIES[gameState.difficulty].color
+            }}
+          >
+            {DIFFICULTIES[gameState.difficulty].name}
+          </span>
+        </DifficultySummary>
+        <DifficultyContent role="group" aria-labelledby="difficulty-summary">
+          <DifficultyChoicesWrapper>
+            {Object.entries(DIFFICULTIES).map(
+              ([level, { id, name, description }]) => (
+                <div key={id}>
+                  <input
+                    type="radio"
+                    id={id}
+                    name="flag-flip-difficulty"
+                    value={level}
+                    checked={gameState.difficulty === Number(level)}
+                    onChange={() => {
+                      gameState.setDifficulty(Number(level) as DifficultyLevel);
+                      gameState.resetGame();
+                    }}
+                    aria-describedby={`${id}-desc`}
+                  />
+                  <label
+                    htmlFor={id}
+                    style={{
+                      color:
+                        DIFFICULTIES[Number(level) as DifficultyLevel].color
+                    }}
+                  >
+                    {name}
+                  </label>
+                  <br />
+                  <span id={`${id}-desc`}>{description}</span>
+                </div>
+              )
+            )}
+          </DifficultyChoicesWrapper>
+        </DifficultyContent>
+      </DifficultyCollapsible>
     </div>
   );
 };
