@@ -2,7 +2,6 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { countries } from "country-flag-icons";
 
 export const countryNames: Record<string, string> = {
-  AC: "Ascension Island",
   AD: "Andorra",
   AE: "United Arab Emirates",
   AF: "Afghanistan",
@@ -377,9 +376,11 @@ class FlagFlipLogic {
   private buildRandomizedCards(): MatchCard[] {
     // Make a fresh copy of all country codes
     const available = [...countries];
-    // Remove the ones used in the previous game
+
+    // Filter out codes that do not correspond with a country name
+    // Filter out codes used in the previous game
     const filtered = available.filter(
-      (c) => !this.lastPickedCountries.includes(c)
+      (c) => countryNames[c] && !this.lastPickedCountries.includes(c)
     );
 
     // Shuffle and pick 8 new unique countries
@@ -389,11 +390,11 @@ class FlagFlipLogic {
     this.lastPickedCountries = picked;
 
     // Double them up and shuffle for card pairing
-    const doubled = picked
+    const cardCodes = picked
       .flatMap((code) => [code, code])
       .sort(() => 0.5 - Math.random());
 
-    return doubled.map((code) => new MatchCard(this.nextId++, code));
+    return cardCodes.map((code) => new MatchCard(this.nextId++, code));
   }
 
   private dealNewGame() {
