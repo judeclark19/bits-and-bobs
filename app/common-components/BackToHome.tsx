@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { styled } from "styled-components";
 import { bitsAndBobs } from "./ListOfBits";
 
@@ -30,6 +30,7 @@ const SelectStyle = styled.select`
 
 export default function BackToHome() {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <ContainerStyle>
@@ -38,7 +39,7 @@ export default function BackToHome() {
       <SelectStyle
         defaultValue={pathname}
         onChange={(e) => {
-          window.location.assign(e.target.value);
+          router.push(e.target.value);
         }}
       >
         {bitsAndBobs.map((b, i) => (
