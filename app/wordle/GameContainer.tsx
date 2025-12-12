@@ -31,18 +31,18 @@ const GameContainer = observer(() => {
     // Initialize the game state on the client side
     if (!wordleGameState.isInitialized && documentReady) {
       wordleGameState.setDocumentRefs(
-        gameWrapper.current,
-        guessingGrid.current,
-        keyboard.current
+        gameWrapper.current!,
+        guessingGrid.current!,
+        keyboard.current!
       );
       wordleGameState.initializeGame();
       window.addEventListener("keydown", keyboardListeners);
       wordleGameState.setInitialized(true);
     } else if (documentReady) {
       wordleGameState.setDocumentRefs(
-        gameWrapper.current,
-        guessingGrid.current,
-        keyboard.current
+        gameWrapper.current!,
+        guessingGrid.current!,
+        keyboard.current!
       );
       wordleGameState.buildGrid();
       console.log(wordleGameState.targetWord);
