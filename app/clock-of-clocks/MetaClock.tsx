@@ -8,13 +8,24 @@ import { DigitPair, MetaClockContainer } from "./MetaClock.styles";
 
 const MetaClock = observer(() => {
   const [store] = useState(() => new MetaClockLogic());
+  const [hasMounted, setHasMounted] = useState(false);
+
+  // Ensure we never show a server-rendered “snapshot” on hard refresh.
+  // After mount, we start ticking using the real client clock.
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
+    if (!hasMounted) return;
+
     store.start();
     return () => {
       store.stop();
     };
-  }, [store]);
+  }, [hasMounted, store]);
+
+  if (!hasMounted) return null;
 
   return (
     <MetaClockContainer>

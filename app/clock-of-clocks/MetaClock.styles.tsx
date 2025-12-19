@@ -50,7 +50,7 @@ export const FaceStyle = styled.div`
 `;
 
 export const Hand = styled.div<{
-  angle: number;
+  $angle: number;
 }>`
   width: 45%;
   height: 3px;
@@ -60,6 +60,6 @@ export const Hand = styled.div<{
   top: 50%;
   left: 50%;
   translate: 0% -50%;
-  rotate: ${({ angle }) => angle}deg;
+  rotate: ${({ $angle }) => $angle}deg;
   transition: rotate 800ms;
 `;
